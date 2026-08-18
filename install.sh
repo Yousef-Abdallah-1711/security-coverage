@@ -78,7 +78,7 @@ copy_plugin_replace() {
   mkdir -p "$dst"
   mkdir -p "$dst/.codex-plugin" "$dst/commands" "$dst/skills"
   cp "$ROOT_DIR/.codex-plugin/plugin.json" "$dst/.codex-plugin/plugin.json"
-  cp "$ROOT_DIR/README.md" "$ROOT_DIR/LICENSE" "$ROOT_DIR/.gitignore" "$ROOT_DIR/.gitattributes" "$ROOT_DIR/install.sh" "$dst/"
+  cp "$ROOT_DIR/README.md" "$ROOT_DIR/LICENSE" "$ROOT_DIR/.gitignore" "$ROOT_DIR/.gitattributes" "$ROOT_DIR/install.sh" "$ROOT_DIR/install.ps1" "$ROOT_DIR/package.json" "$dst/"
   cp -R "$ROOT_DIR/commands/." "$dst/commands/"
   cp -R "$ROOT_DIR/skills/." "$dst/skills/"
 }

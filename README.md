@@ -10,15 +10,67 @@ Three commands that turn "we should check security" into a designed, layered, ev
 
 There is intentionally no slides command.
 
-## Install
+## Installation
+
+### One command with Skills CLI
+
+After this repo is available in `rakymat-plugins`, install with:
+
+```bash
+npx skills add rakymat-plugins/security-coverage --all
+```
+
+Windows PowerShell note: if `npx` fails with a script execution policy error, use:
+
+```powershell
+npx.cmd skills add rakymat-plugins/security-coverage --all
+```
+
+Temporary PowerShell-session workaround:
+
+```powershell
+Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+npx skills add rakymat-plugins/security-coverage --all
+```
+
+This does not change the machine-wide policy.
+
+### Current working clone
+
+The org repo URL will not clone until the code is pushed to `rakymat-plugins/security-coverage`.
+Right now the pushed copy is here:
+
+```bash
+git clone https://github.com/yousefabdallah171/security-coverage.git
+cd security-coverage
+bash install.sh
+```
+
+By default this installs for both Claude and Codex.
+
+### Org clone after mirror/push
+
+Once `rakymat-plugins/security-coverage` has the code:
 
 ```bash
 git clone https://github.com/rakymat-plugins/security-coverage.git
 cd security-coverage
-./install.sh
+bash install.sh
 ```
 
-By default this installs for both Claude and Codex.
+### Windows manual install
+
+```powershell
+git clone https://github.com/yousefabdallah171/security-coverage.git
+cd security-coverage
+.\install.ps1
+```
+
+After the org repo is populated, replace the clone URL with:
+
+```text
+https://github.com/rakymat-plugins/security-coverage.git
+```
 
 ## Options
 
@@ -33,12 +85,12 @@ By default this installs for both Claude and Codex.
 
 Re-run `./install.sh` any time to update. The installer replaces the previous install so deleted upstream files do not linger.
 
-## Windows
+## Git Bash On Windows
 
 Run from Git Bash:
 
 ```bash
-./install.sh
+bash install.sh
 ```
 
 From PowerShell or CMD, call Git Bash directly:
