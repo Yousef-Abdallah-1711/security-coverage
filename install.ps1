@@ -9,6 +9,7 @@ param(
 $ErrorActionPreference = "Stop"
 $PluginName = "security-coverage"
 $Commands = @("security-assess", "security-plan", "security-implement")
+$CommandSkills = @("security-assess", "security-plan", "security-implement")
 $RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 
 function Show-Usage {
@@ -57,9 +58,10 @@ function Copy-PluginReplace {
   New-Item -ItemType Directory -Force -Path $Destination | Out-Null
   New-Item -ItemType Directory -Force -Path "$Destination\.codex-plugin", "$Destination\commands", "$Destination\skills" | Out-Null
   Copy-Item "$RootDir\.codex-plugin\plugin.json" "$Destination\.codex-plugin\plugin.json" -Force
-  Copy-Item "$RootDir\SKILL.md", "$RootDir\README.md", "$RootDir\LICENSE", "$RootDir\.gitignore", "$RootDir\.gitattributes", "$RootDir\install.sh", "$RootDir\install.ps1", "$RootDir\package.json" $Destination -Force
+  Copy-Item "$RootDir\README.md", "$RootDir\LICENSE", "$RootDir\.gitignore", "$RootDir\.gitattributes", "$RootDir\install.sh", "$RootDir\install.ps1", "$RootDir\package.json" $Destination -Force
   Copy-Item "$RootDir\commands\*" "$Destination\commands\" -Recurse -Force
   Copy-Item "$RootDir\skills\*" "$Destination\skills\" -Recurse -Force
+  Copy-Item "$RootDir\security-assess", "$RootDir\security-plan", "$RootDir\security-implement" $Destination -Recurse -Force
 }
 
 function Install-Commands {
@@ -93,6 +95,9 @@ function Install-Claude {
 
   if ($Uninstall) {
     Remove-Item "$Base\skills\$PluginName" -Recurse -Force -ErrorAction SilentlyContinue
+    foreach ($Skill in $CommandSkills) {
+      Remove-Item "$Base\skills\$Skill" -Recurse -Force -ErrorAction SilentlyContinue
+    }
     foreach ($Command in $Commands) {
       Remove-Item "$Base\commands\$Command.md" -Force -ErrorAction SilentlyContinue
     }
@@ -101,9 +106,15 @@ function Install-Claude {
   }
 
   Copy-DirReplace "$RootDir\skills\$PluginName" "$Base\skills\$PluginName"
+  foreach ($Skill in $CommandSkills) {
+    Copy-DirReplace "$RootDir\$Skill" "$Base\skills\$Skill"
+  }
   Install-Commands "$Base\commands"
   Assert-Dir "$Base\skills\$PluginName"
   Assert-File "$Base\skills\$PluginName\SKILL.md"
+  foreach ($Skill in $CommandSkills) {
+    Assert-File "$Base\skills\$Skill\SKILL.md"
+  }
   foreach ($Command in $Commands) {
     Assert-File "$Base\commands\$Command.md"
   }
@@ -121,6 +132,9 @@ function Install-Codex {
 
   if ($Uninstall) {
     Remove-Item "$Base\skills\$PluginName", "$Base\plugins\$PluginName" -Recurse -Force -ErrorAction SilentlyContinue
+    foreach ($Skill in $CommandSkills) {
+      Remove-Item "$Base\skills\$Skill" -Recurse -Force -ErrorAction SilentlyContinue
+    }
     foreach ($Command in $Commands) {
       Remove-Item "$Base\commands\$Command.md" -Force -ErrorAction SilentlyContinue
     }
@@ -129,10 +143,16 @@ function Install-Codex {
   }
 
   Copy-DirReplace "$RootDir\skills\$PluginName" "$Base\skills\$PluginName"
+  foreach ($Skill in $CommandSkills) {
+    Copy-DirReplace "$RootDir\$Skill" "$Base\skills\$Skill"
+  }
   Copy-PluginReplace "$Base\plugins\$PluginName"
   Install-Commands "$Base\commands"
   Assert-Dir "$Base\skills\$PluginName"
   Assert-File "$Base\skills\$PluginName\SKILL.md"
+  foreach ($Skill in $CommandSkills) {
+    Assert-File "$Base\skills\$Skill\SKILL.md"
+  }
   Assert-File "$Base\plugins\$PluginName\.codex-plugin\plugin.json"
   foreach ($Command in $Commands) {
     Assert-File "$Base\commands\$Command.md"

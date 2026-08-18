@@ -20,7 +20,17 @@ Install from the working GitHub repo:
 npx skills add Yousef-Abdallah-1711/security-coverage --all
 ```
 
-This installs the `security-coverage` skill for Claude Code and other agents. The Skills CLI does not currently activate Claude slash command files at `~/.claude/commands` from this repo automatically.
+This installs three Claude Code skills, which are invoked exactly like slash commands:
+
+```text
+/security-assess
+/security-plan
+/security-implement
+```
+
+The Skills CLI installs these under `.claude/skills/` or `~/.claude/skills/` depending on scope. Claude Code exposes each skill by its folder name.
+
+The repo also includes `.claude/commands/` files and `install.ps1`/`install.sh` for users who prefer classic Claude command files.
 
 To make `/security-assess`, `/security-plan`, and `/security-implement` appear in Claude Code after using `npx skills add`, run this once in PowerShell:
 
@@ -137,6 +147,9 @@ Global Claude install:
 
 ```text
 ~/.claude/skills/security-coverage/
+~/.claude/skills/security-assess/
+~/.claude/skills/security-plan/
+~/.claude/skills/security-implement/
 ~/.claude/commands/security-assess.md
 ~/.claude/commands/security-plan.md
 ~/.claude/commands/security-implement.md
@@ -146,6 +159,9 @@ Global Codex install:
 
 ```text
 ~/.codex/skills/security-coverage/
+~/.codex/skills/security-assess/
+~/.codex/skills/security-plan/
+~/.codex/skills/security-implement/
 ~/.codex/commands/security-assess.md
 ~/.codex/commands/security-plan.md
 ~/.codex/commands/security-implement.md
@@ -218,9 +234,11 @@ It uses Python standard library only and reports languages, package managers, fr
 ## Repo contents
 
 ```text
-SKILL.md
 install.sh
 .claude/commands/
+security-assess/
+security-plan/
+security-implement/
 commands/
   security-assess.md
   security-plan.md
