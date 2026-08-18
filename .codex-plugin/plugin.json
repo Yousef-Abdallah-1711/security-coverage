@@ -1,0 +1,40 @@
+{
+  "name": "security-coverage",
+  "version": "0.1.0",
+  "description": "Security audit, hardening, and evidence workflow for production-ready applications.",
+  "author": {
+    "name": "Rakymat Plugins",
+    "url": "https://github.com/rakymat-plugins"
+  },
+  "homepage": "https://github.com/rakymat-plugins/security-coverage",
+  "repository": "https://github.com/rakymat-plugins/security-coverage",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "audit",
+    "hardening",
+    "appsec",
+    "codex",
+    "claude"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Security Coverage",
+    "shortDescription": "Plan and execute layered security audits with evidence.",
+    "longDescription": "Security Coverage helps agents assess attack surface, plan security hardening, and implement safe, evidence-backed security phases across application stacks.",
+    "developerName": "Rakymat Plugins",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Security",
+      "Code Review",
+      "Planning"
+    ],
+    "websiteURL": "https://github.com/rakymat-plugins/security-coverage",
+    "defaultPrompt": [
+      "Assess security coverage for this repo.",
+      "Plan security hardening phases.",
+      "Implement the next security phase safely."
+    ],
+    "brandColor": "#06B6D4"
+  }
+}
