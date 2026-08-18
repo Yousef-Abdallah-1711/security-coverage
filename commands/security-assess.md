@@ -1,33 +1,49 @@
 # /security-assess
 
-Use the `security-coverage` skill to assess this repository's security coverage.
+Run the Security Coverage assessment workflow for the current repository.
 
-## Reads
+First, read the canonical skill instructions from the first path that exists:
 
-- The current repository.
-- Existing security docs under `docs/security/`, if present.
-- The stack detector at `skills/security-coverage/scripts/detect_security_stack.py`, when available.
-- References:
-  - `references/layers.md`
-  - `references/threat-model.md`
-  - `references/stack-map.md`
+- `.claude/skills/security-coverage/SKILL.md`
+- `.codex/skills/security-coverage/SKILL.md`
+- `skills/security-coverage/SKILL.md`
+- `~/.claude/skills/security-coverage/SKILL.md`
+- `~/.codex/skills/security-coverage/SKILL.md`
 
-## Writes
+Then read these references from the same skill directory:
 
-- `docs/security/SECURITY-STRATEGY.md`
+- `references/layers.md`
+- `references/threat-model.md`
+- `references/stack-map.md`
 
-Use `templates/SECURITY-STRATEGY.md` as the output shape.
+Use this template from the same skill directory:
 
-## Workflow
+- `templates/SECURITY-STRATEGY.md`
 
-1. Detect the stack and attack surface from files, routes, APIs, admin tools, auth, database, payments, and deployment signals.
-2. Inspect a representative sample before trusting path heuristics.
-3. Decide every security layer as `ADOPT`, `PARTIAL`, `DEFER`, or `SKIP`.
-4. Record assumptions, assets, trust boundaries, likely threats, current controls, and gaps.
-5. Ask only for business/security intent that cannot be discovered from the repo.
+## Task
 
-## Stop When
+Create or update:
 
-`docs/security/SECURITY-STRATEGY.md` is complete enough for `/security-plan` to produce phased tasks without inventing scope.
+```text
+docs/security/SECURITY-STRATEGY.md
+```
 
-Do not modify application code during assessment.
+## Required Workflow
+
+1. Inspect the current repository from its root. Do not assume context from earlier chat.
+2. If available, run the detector:
+
+   ```bash
+   python3 <skill-dir>/scripts/detect_security_stack.py . --json
+   ```
+
+   If Python is not available, continue by inspecting files manually.
+3. Identify the real attack surface: routes, APIs, forms, auth, sessions, roles, admin screens, databases, file uploads, payments, webhooks, browser entry points, deployment files, logs, and backups.
+4. Classify every layer S0-S11 as `ADOPT`, `PARTIAL`, `DEFER`, or `SKIP` with a reason.
+5. Write a complete `SECURITY-STRATEGY.md` using the template.
+
+## Stop Condition
+
+Stop when `docs/security/SECURITY-STRATEGY.md` exists and is detailed enough for `/security-plan` to create executable phases.
+
+Do not modify application code, production settings, databases, payment state, or secrets during assessment.

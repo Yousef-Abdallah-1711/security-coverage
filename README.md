@@ -20,6 +20,17 @@ Install from the working GitHub repo:
 npx skills add Yousef-Abdallah-1711/security-coverage --all
 ```
 
+This installs the `security-coverage` skill for Claude Code and other agents. The Skills CLI does not currently activate Claude slash command files at `~/.claude/commands` from this repo automatically.
+
+To make `/security-assess`, `/security-plan`, and `/security-implement` appear in Claude Code after using `npx skills add`, run this once in PowerShell:
+
+```powershell
+New-Item -ItemType Directory -Force "$HOME\.claude\commands" | Out-Null
+Copy-Item "$HOME\.claude\skills\security-coverage\commands\*.md" "$HOME\.claude\commands\" -Force
+```
+
+Then restart Claude Code.
+
 Windows PowerShell note: if `npx` fails with a script execution policy error, use:
 
 ```powershell
@@ -77,6 +88,8 @@ cd security-coverage
 .\install.ps1
 ```
 
+This installs both the skill and the Claude slash commands.
+
 After the org repo is populated, replace the clone URL with:
 
 ```text
@@ -111,6 +124,14 @@ From PowerShell or CMD, call Git Bash directly:
 ```
 
 ## What it installs
+
+Claude Code slash commands:
+
+```text
+~/.claude/commands/security-assess.md
+~/.claude/commands/security-plan.md
+~/.claude/commands/security-implement.md
+```
 
 Global Claude install:
 
@@ -199,6 +220,7 @@ It uses Python standard library only and reports languages, package managers, fr
 ```text
 SKILL.md
 install.sh
+.claude/commands/
 commands/
   security-assess.md
   security-plan.md
