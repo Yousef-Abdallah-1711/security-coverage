@@ -5,7 +5,7 @@
   "description": "Security audit, hardening, and evidence workflow for Codex and Claude.",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rakymat-plugins/security-coverage.git"
+    "url": "https://github.com/Yousef-Abdallah-1711/security-coverage.git"
   },
   "license": "MIT",
   "scripts": {

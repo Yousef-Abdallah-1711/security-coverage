@@ -57,7 +57,7 @@ function Copy-PluginReplace {
   New-Item -ItemType Directory -Force -Path $Destination | Out-Null
   New-Item -ItemType Directory -Force -Path "$Destination\.codex-plugin", "$Destination\commands", "$Destination\skills" | Out-Null
   Copy-Item "$RootDir\.codex-plugin\plugin.json" "$Destination\.codex-plugin\plugin.json" -Force
-  Copy-Item "$RootDir\README.md", "$RootDir\LICENSE", "$RootDir\.gitignore", "$RootDir\.gitattributes", "$RootDir\install.sh", "$RootDir\install.ps1" $Destination -Force
+  Copy-Item "$RootDir\SKILL.md", "$RootDir\README.md", "$RootDir\LICENSE", "$RootDir\.gitignore", "$RootDir\.gitattributes", "$RootDir\install.sh", "$RootDir\install.ps1", "$RootDir\package.json" $Destination -Force
   Copy-Item "$RootDir\commands\*" "$Destination\commands\" -Recurse -Force
   Copy-Item "$RootDir\skills\*" "$Destination\skills\" -Recurse -Force
 }

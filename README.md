@@ -14,34 +14,45 @@ There is intentionally no slides command.
 
 ### One command with Skills CLI
 
-After this repo is available in `rakymat-plugins`, install with:
+Install from the working GitHub repo:
 
 ```bash
-npx skills add rakymat-plugins/security-coverage --all
+npx skills add Yousef-Abdallah-1711/security-coverage --all
 ```
 
 Windows PowerShell note: if `npx` fails with a script execution policy error, use:
 
 ```powershell
-npx.cmd skills add rakymat-plugins/security-coverage --all
+npx.cmd skills add Yousef-Abdallah-1711/security-coverage --all
 ```
 
 Temporary PowerShell-session workaround:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
-npx skills add rakymat-plugins/security-coverage --all
+npx skills add Yousef-Abdallah-1711/security-coverage --all
 ```
 
 This does not change the machine-wide policy.
 
-### Current working clone
-
-The org repo URL will not clone until the code is pushed to `rakymat-plugins/security-coverage`.
-Right now the pushed copy is here:
+If the repo has been mirrored into `rakymat-plugins`, this works too:
 
 ```bash
-git clone https://github.com/yousefabdallah171/security-coverage.git
+npx skills add rakymat-plugins/security-coverage --all
+```
+
+If an older clone has only `skills/security-coverage/SKILL.md`, add `--full-depth`:
+
+```bash
+npx skills add rakymat-plugins/security-coverage --all --full-depth
+```
+
+### Current working clone
+
+The currently pushed copy is here:
+
+```bash
+git clone https://github.com/Yousef-Abdallah-1711/security-coverage.git
 cd security-coverage
 bash install.sh
 ```
@@ -61,7 +72,7 @@ bash install.sh
 ### Windows manual install
 
 ```powershell
-git clone https://github.com/yousefabdallah171/security-coverage.git
+git clone https://github.com/Yousef-Abdallah-1711/security-coverage.git
 cd security-coverage
 .\install.ps1
 ```
@@ -186,6 +197,7 @@ It uses Python standard library only and reports languages, package managers, fr
 ## Repo contents
 
 ```text
+SKILL.md
 install.sh
 commands/
   security-assess.md
