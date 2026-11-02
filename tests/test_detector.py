@@ -111,12 +111,13 @@ class DetectorTests(unittest.TestCase):
 
     def test_unreadable_file_warning(self):
         path = self.write("app.py", "print('x')")
-        original_open = Path.open
+        path_class = type(path)
+        original_open = path_class.open
         def fail_open(obj, *args, **kwargs):
             if os.path.normcase(os.path.abspath(obj)) == os.path.normcase(os.path.abspath(path)):
                 raise PermissionError("denied")
             return original_open(obj, *args, **kwargs)
-        with mock.patch.object(Path, "open", fail_open):
+        with mock.patch.object(path_class, "open", fail_open):
             result = detector.detect(self.root)
         self.assertEqual(result["scan_status"], "INCOMPLETE SCAN")
         self.assertTrue(any("Unreadable file" in item for item in result["warnings"]))
