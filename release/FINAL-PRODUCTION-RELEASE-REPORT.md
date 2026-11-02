@@ -111,7 +111,7 @@ PASS: PR run [41391053531](https://github.com/Yousef-Abdallah-1711/security-cove
 
 ## O. Branding
 
-Prior inspection reported the existing cover at 2172×724 (PNG and WebP) and square logo at 512×512 PNG. Candidate README retains relative cover references. Assets were not regenerated. Fresh rendering/accessibility review is NOT VERIFIED for this continuation.
+Existing assets: `assets/branding/security-coverage-cover.png` and `assets/branding/security-coverage-cover.webp` at 2172×724; `assets/branding/security-coverage-logo.png` at 512×512 (the original logo source is also present). Candidate README retains relative cover references. Assets were not regenerated. Fresh rendering/accessibility review is NOT VERIFIED for this continuation.
 
 ## P. Documentation
 
@@ -124,7 +124,7 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 | A — Repository integrity | PASS for preserved local candidate | Backup reported verified; remote main was fetched and remained at the baseline; candidate diff reviewed. |
 | B — Architecture | PASS locally | Single skill, references, templates, detector, package validation pass. |
 | C — Security | FAIL | Strict host-network no-attempt gate and required agent refusal/injection behavior are not fully evidenced. |
-| D — Testing | PASS for candidate | 40 local tests pass (one Windows symlink capability skip); candidate CI run 41391053531 passed all 9 jobs, including Linux symlink coverage and offline validation. |
+| D — Testing | PASS for candidate | 40 local tests pass (one Windows symlink capability skip); final candidate head `961fd1490baaf6704f3e03ea004562efc8e1462c` passed all 9 jobs in run [41391292195](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41391292195), including Linux symlink coverage and offline validation. |
 | E — Distribution | PASS for candidate | Local and remote candidate Skills CLI install and package validation pass. Published-main install remains unavailable until a permitted merge. |
 | F — Documentation | PARTIAL | Major scope/compatibility disclosures updated; full README rendering and all advertised command matrix not freshly checked. |
 | G — Workflow demonstration | PARTIAL | Approved demo exists; refusal, evidence-scope variants, and resume/recovery scenarios are open. |
@@ -132,13 +132,13 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 
 ## R. Git delivery
 
-Candidate branch `release/security-coverage-v1-readiness` is pushed. Implementation commit `2c58ae308a887082976c9456e11a394fbbb97f36`; draft PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) targets `main`, is clean/mergeable, and has all checks passing in run 41391053531. The release report/evidence follow-up is being committed separately. `main` and `origin/main` remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail.
+Candidate branch `release/security-coverage-v1-readiness` is pushed; the verified report/evidence candidate HEAD at this check was `961fd1490baaf6704f3e03ea004562efc8e1462c`. Implementation commit `2c58ae308a887082976c9456e11a394fbbb97f36` contains code and workflow changes. Draft PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) targets `main`, is clean/mergeable, and all 9 checks passed on the report/evidence candidate HEAD in run [41391292195](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41391292195). `main` and `origin/main` remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail.
 
 ## S. Remaining risks
 
 1. The host-level strict network policy is unproven and the historical Codex startup attempted remote requests.
 2. Runtime approval refusal, ambiguity, scope expansion, evidence inclusion/exclusion, and interruption recovery remain unverified.
-3. Candidate hosted CI and Linux symlink result are unverified.
+3. Candidate hosted CI and Linux symlink requirements passed; they do not verify agent refusal/resume behavior.
 4. Claude Code and other agent runtime compatibility is not established.
 5. Full installer/platform and secret-scanning matrices are not freshly evidenced.
 

@@ -44,3 +44,5 @@ The current candidate is not merged to `main`. Do not claim production readiness
 ## Candidate hosted verification update
 
 Release candidate commit `2c58ae308a887082976c9456e11a394fbbb97f36` is pushed; draft PR #1 targets `main`. Hosted Actions run 41391053531 passed all 9 jobs, including Linux symlink and offline container verification. Initial run 41390992201 failed because `scripts/verify_offline.sh` lacked the executable bit; this was fixed on the branch and the rerun passed. The Skills CLI remote candidate installation succeeded from a temporary no-slash ref at the same SHA. These results do not close agent-host network, refusal, evidence, resume, or compatibility gates. `main` must remain unchanged.
+
+Final report/evidence candidate HEAD `961fd1490baaf6704f3e03ea004562efc8e1462c` passed all 9 jobs in run 41391292195. Main remains unchanged because security/workflow gates are open.

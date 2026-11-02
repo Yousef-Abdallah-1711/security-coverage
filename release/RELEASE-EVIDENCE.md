@@ -78,3 +78,5 @@ Skills CLI 1.7.4 installed the remote candidate from a temporary no-slash branch
 This CI/distribution evidence does not clear the mandatory agent-host no-network-attempt, approval refusal, evidence/resume, or runtime compatibility gates. PR #1 remains draft and must not be merged. `main` remains at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`.
 
 The no-slash helper ref was deleted after its install verification; only the release candidate branch remains pushed.
+
+Final report/evidence candidate HEAD `961fd1490baaf6704f3e03ea004562efc8e1462c` passed all 9 jobs in Actions run [41391292195](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41391292195). That run covers all Python versions on Windows and Ubuntu, Linux symlink handling, shell/PowerShell syntax, and offline detector/package isolation. The release branch remains draft PR #1; no main merge or Agensi submission occurred.
