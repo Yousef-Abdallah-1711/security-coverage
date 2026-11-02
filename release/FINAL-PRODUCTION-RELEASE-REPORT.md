@@ -149,4 +149,3 @@ Candidate branch `release/security-coverage-v1-readiness` is pushed. Implementat
 ## U. Owner next steps
 
 After the mandatory gates are closed and the release candidate passes hosted CI, review and merge its PR through the repository's protected workflow. Then rebuild and verify the package from final `main`, recompute its SHA-256, confirm the published Skills CLI install, and have the owner submit `dist/security-coverage-agensi.zip` with the reviewed `marketplace/listing.md` and demo materials. No Agensi submission was made by this task.
-
