@@ -32,3 +32,11 @@ Baseline: `d003f4805dea8686a00205c6bf1efb03399a3ba5` (2026-11-01 audit). Impleme
 | SEC-012 doc separation | DONE | End-user and contributor docs separated; sensitive Git token examples removed |
 | SEC-013 framework profiles | DEFERRED | No evidence supports adding profiles for v1 |
 | SEC-014 schema version/migration | PARTIAL | Schema version fields added; migration guidance for historic user reports remains unimplemented |
+
+## 2026-11-02 final-candidate revalidation
+
+The release-candidate continuation is **NOT READY** for `main`. Local evidence: 40 unit tests pass with one Windows symlink capability skip; package source validation passes; Docker offline detector/package check passes with network probe blocked; Python 3.8 AST parse, Bash syntax, PowerShell parse, JSON parse, diff whitespace, local Skills CLI 1.7.4 discovery/install, and candidate Agensi ZIP checks pass. See `FINAL-PRODUCTION-RELEASE-REPORT.md` for exact scope and current hashes.
+
+Still open: strict host-level agent network isolation/no-attempt; runtime refusal/no-response/ambiguous/changed-scope and evidence-scope scenarios; resume/recovery runtime scenarios; fresh Linux symlink and hosted candidate CI evidence; full installer matrix; secret scan; Claude and third-party agent runtime coverage. Historical Codex startup catalog requests were blocked with HTTP 401 but still count as attempts for the strict no-attempt gate.
+
+The current candidate is not merged to `main`. Do not claim production readiness or submit to Agensi. Candidate branch and hosted CI details, if produced, are recorded in the final release report.

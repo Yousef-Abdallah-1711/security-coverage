@@ -65,11 +65,11 @@ The Skills CLI discovers and installs SKILL.md files; it does not install the se
 
 | Agent | Distribution/integration | Evidence status |
 |---|---|---|
-| Claude Code | Skills CLI skill; optional repository command adapters via installer | Structurally compatible; runtime not yet verified in this repository |
-| Codex CLI | Skills CLI skill; Codex plugin metadata and optional command adapters via installer | Structurally compatible; runtime not yet verified in this repository |
+| Claude Code | Skills CLI skill; optional repository command adapters via installer | Runtime verification status and exact tested version are recorded in `release/FINAL-PRODUCTION-RELEASE-REPORT.md`; no cross-agent security guarantee is implied |
+| Codex CLI | Skills CLI skill; Codex plugin metadata and optional command adapters via installer | Runtime verification status and exact tested version are recorded in `release/FINAL-PRODUCTION-RELEASE-REPORT.md`; no cross-agent security guarantee is implied |
 | Other Skills CLI agents | Install the single `security-coverage` skill where supported | Not individually tested; slash commands are not implied |
 
-The Agent Skills format is open, but each agent differs in discovery, tool permissions, file access, and invocation. No cross-agent slash-command compatibility is claimed.
+The Agent Skills format is open, but each agent differs in discovery, tool permissions, file access, and invocation. The compatibility table describes tested versions only; do not infer that slash commands or security behavior transfer across agents.
 
 ## Workflows and commands
 
@@ -178,7 +178,7 @@ See [workflow command classes and gates](skills/security-coverage/references/gat
 
 ## Stack detection
 
-The optional `skills/security-coverage/scripts/detect_security_stack.py` uses only Python’s standard library. It reports `DETECTED`, `POSSIBLE`, `NOT DETECTED`, `NOT SCANNED`, or `INCOMPLETE SCAN` signals; it does not identify vulnerabilities. Python 3.8+ is required. Inspect the script before running it on an unfamiliar repository.
+The optional `skills/security-coverage/scripts/detect_security_stack.py` uses only Python’s standard library. It reports heuristic `DETECTED` markers and `POSSIBLE` review leads, with schema v3 evidence classes that distinguish source/manifest markers from documentation-only mentions. None confirms technology use or a vulnerability. Python 3.8+ is required. Inspect the script before running it on an unfamiliar repository.
 
 ```bash
 python skills/security-coverage/scripts/detect_security_stack.py /path/to/repo --json
@@ -193,6 +193,8 @@ python -m pip install -r requirements-test.txt
 python -m unittest discover -s tests -v
 python scripts/build_agensi_package.py --check
 ```
+
+For a repeatable offline check of the detector and package builder, run `scripts/verify_offline.sh` with Docker available. The script downloads/builds the Python test image before the check; its verification container runs with `--network none`, a read-only repository mount, and a temporary writable directory. The egress probe is expected to be blocked. This isolates these local tools, not an agent host or model API connection.
 
 The skill’s layer coverage is a review aid. It can miss issues, produce false leads, and cannot establish the safety of systems it cannot inspect. Framework signals and generated documents do not replace expert review or real verification.
 

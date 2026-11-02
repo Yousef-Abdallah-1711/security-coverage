@@ -25,9 +25,11 @@ class ContractTests(unittest.TestCase):
         self.assertTrue(meta["description"])
         self.assertLessEqual(len(meta["description"]), 1024)
         self.assertEqual(meta["license"], "MIT")
-        self.assertEqual(meta["version"], "1.0.0")
-        self.assertTrue(meta["summary"])
-        self.assertTrue(meta["use_cases"])
+        self.assertEqual(meta["metadata"]["version"], "1.0.0")
+        self.assertTrue(meta["metadata"]["summary"])
+        self.assertTrue(meta["metadata"]["use_cases"])
+        self.assertTrue(all(isinstance(value, str) for value in meta["metadata"].values()))
+        self.assertEqual(set(meta), {"name", "description", "license", "compatibility", "metadata"})
 
     def test_skill_references_resolve_inside_package(self):
         body = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8")
@@ -36,20 +38,48 @@ class ContractTests(unittest.TestCase):
             self.assertTrue((SKILL_ROOT / relative).is_file(), relative)
         for path in (SKILL_ROOT / "references").glob("*.md"):
             self.assertTrue(path.is_file())
+        self.assertIn("references/resume-and-migration.md", body)
+        self.assertIn("references/verification-examples.md", body)
 
     def test_templates_share_required_schema_terms(self):
         strategy = (SKILL_ROOT / "templates/SECURITY-STRATEGY.md").read_text(encoding="utf-8")
         plan = (SKILL_ROOT / "templates/SECURITY-PLAN.md").read_text(encoding="utf-8")
         tasks = (SKILL_ROOT / "templates/SECURITY-TASKS.md").read_text(encoding="utf-8")
         evidence = (SKILL_ROOT / "templates/SECURITY-EVIDENCE-LOG.md").read_text(encoding="utf-8")
-        for field in ("ID", "Layer", "Severity", "Evidence", "Affected files", "Recommended action"):
+        for field in ("Schema version: 2", "Finding ID", "Layer", "Severity", "Evidence", "Affected files", "Recommended action", "Risk owner"):
             self.assertIn(field, strategy)
-        for field in ("Source findings", "Acceptance criteria", "Verification", "Residual risks"):
+        for field in ("Schema version: 2", "Source findings", "Acceptance criteria", "Verification", "Residual risks", "Application changes", "Workflow documentation changes", "Network requirements"):
             self.assertIn(field, plan)
-        for field in ("Task ID", "Source finding", "Phase", "Status"):
+        for field in ("Schema version: 2", "Task ID", "Source finding", "Phase", "Status", "Phase status"):
             self.assertIn(field, tasks)
-        for field in ("Commands executed", "Actual results", "Failed checks", "Skipped checks", "Remaining risks", "Gate result"):
+        for field in ("Schema version: 2", "Commands executed", "Approval reference", "Approved application files", "Approved workflow-document files", "Actual results", "Failed checks", "Skipped checks", "Remaining risks", "Gate result"):
             self.assertIn(field, evidence)
+
+    def test_approval_preview_covers_scope_categories_and_refusal(self):
+        skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8").lower()
+        gates = (SKILL_ROOT / "references/gates.md").read_text(encoding="utf-8").lower()
+        for phrase in ("application/source/configuration/test/migration files", "workflow-document changes", "verification commands", "network requirements", "ambiguous", "silence"):
+            self.assertIn(phrase, skill)
+        self.assertIn("refusal ends the phase", gates)
+        self.assertIn("scope-change", gates)
+
+    def test_resume_and_schema_migration_are_versioned_and_opt_in(self):
+        migration = (SKILL_ROOT / "references/resume-and-migration.md").read_text(encoding="utf-8").lower()
+        skill = (SKILL_ROOT / "SKILL.md").read_text(encoding="utf-8").lower()
+        for phrase in ("schema v1", "read-only", "never silently rewrite", "unchanged archival copy", "v2 destination", "conversation memory"):
+            self.assertIn(phrase, migration)
+        self.assertIn("request fresh approval", skill)
+        self.assertIn("append new evidence", skill)
+
+    def test_network_isolation_runner_disables_container_egress(self):
+        runner = (ROOT / "scripts/verify_offline.sh").read_text(encoding="utf-8")
+        checker = (ROOT / "scripts/verify_offline.py").read_text(encoding="utf-8")
+        workflow = (ROOT / ".github/workflows/ci.yml").read_text(encoding="utf-8")
+        self.assertIn("--network none", runner)
+        self.assertIn("--read-only", runner)
+        self.assertIn("socket.create_connection", checker)
+        self.assertIn("offline-isolation", workflow)
+        self.assertIn("scripts/verify_offline.sh", workflow)
 
     def test_workflow_adapters_require_approval_and_are_thin(self):
         implement = (ROOT / "commands/security-implement.md").read_text(encoding="utf-8").lower()

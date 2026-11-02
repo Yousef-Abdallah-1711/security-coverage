@@ -2,8 +2,8 @@
 """Report heuristic stack and attack-surface signals; never report vulnerabilities.
 
 Standard-library only. Symlink targets are not followed. Text samples are bounded.
-JSON schema v2 adds explicit signal states and scan warnings while retaining the
-v1 summary keys (`languages`, `frameworks`, `signals`, and `layer_hints`).
+JSON schema v3 adds evidence classification so documentation-only matches stay
+visible as weaker leads, while retaining v1 summary keys and v2 states/warnings.
 """
 from __future__ import annotations
 
@@ -21,6 +21,7 @@ MAX_FILES = 50000
 MAX_FILE_BYTES = 2_000_000
 SAMPLE_BYTES = 200_000
 IGNORE_DIRS = {".git", ".hg", ".svn", "node_modules", "vendor", "__pycache__", ".next", "dist", "build", "coverage", ".cache", ".pytest_cache", ".venv", "venv"}
+DOCUMENTATION_EXTS = {".md", ".rst", ".txt"}
 TEXT_EXTS = {".js", ".jsx", ".ts", ".tsx", ".php", ".py", ".rb", ".go", ".rs", ".java", ".kt", ".cs", ".swift", ".dart", ".html", ".css", ".json", ".yml", ".yaml", ".toml", ".env", ".md", ".sql", ".sh", ".conf", ".ini", ".xml", ".gradle", ".kts"}
 LANG_BY_EXT = {".js":"JavaScript", ".jsx":"JavaScript", ".ts":"TypeScript", ".tsx":"TypeScript", ".php":"PHP", ".py":"Python", ".rb":"Ruby", ".go":"Go", ".rs":"Rust", ".java":"Java", ".kt":"Kotlin", ".cs":"C#", ".swift":"Swift", ".dart":"Dart"}
 PACKAGE_FILES = {"package.json":"JavaScript package metadata", "pnpm-lock.yaml":"pnpm", "yarn.lock":"Yarn", "package-lock.json":"npm", "composer.json":"Composer/PHP", "requirements.txt":"pip", "pyproject.toml":"Python", "Pipfile":"Pipenv", "poetry.lock":"Poetry", "Gemfile":"Bundler/Ruby", "go.mod":"Go modules", "Cargo.toml":"Cargo/Rust", "pom.xml":"Maven", "build.gradle":"Gradle", "build.gradle.kts":"Gradle"}
@@ -56,6 +57,27 @@ def inside(root: Path, path: Path) -> bool:
         return True
     except ValueError:
         return False
+
+
+def evidence_class(paths: List[str]) -> str:
+    """Classify matched paths without treating documentation as confirmed use."""
+    classes = set()
+    for value in paths:
+        path = Path(value)
+        suffix = path.suffix.lower()
+        if suffix in LANG_BY_EXT or path.name in PACKAGE_FILES:
+            classes.add("SOURCE_OR_MANIFEST")
+        elif suffix in DOCUMENTATION_EXTS:
+            classes.add("DOCUMENTATION_ONLY")
+        else:
+            classes.add("CONFIG_OR_FILENAME")
+    if "SOURCE_OR_MANIFEST" in classes:
+        return "SOURCE_OR_MANIFEST"
+    if "CONFIG_OR_FILENAME" in classes:
+        return "CONFIG_OR_FILENAME"
+    if "DOCUMENTATION_ONLY" in classes:
+        return "DOCUMENTATION_ONLY"
+    return "NO_EVIDENCE"
 
 
 def iter_files(root: Path, warnings: List[str]) -> Iterable[Path]:
@@ -163,11 +185,11 @@ def detect(root: Path) -> dict:
     layer_sources = {"auth_session":"S2", "admin_surface":"S3", "api_surface":"S4", "database":"S5", "payments":"S6", "browser_security":"S7", "infrastructure":"S8", "secrets_config":"S1"}
     layer_hints = [layer + " review likely applies (heuristic)" for signal, layer in layer_sources.items() if possible_signals.get(signal)]
     states = {
-        "frameworks": {name: {"status":"DETECTED" if name in detected_frameworks else "NOT DETECTED", "evidence":detected_frameworks.get(name, [])} for name in all_framework_names},
-        "surfaces": {name: {"status":"POSSIBLE" if name in possible_signals else ("NOT SCANNED" if scanned == 0 else "NOT DETECTED"), "evidence":possible_signals.get(name, [])} for name in all_signal_names},
+        "frameworks": {name: {"status":"DETECTED" if name in detected_frameworks else "NOT DETECTED", "evidence":detected_frameworks.get(name, []), "evidence_class":evidence_class(frameworks.get(name, [])), "interpretation":"HEURISTIC_MARKER_ONLY"} for name in all_framework_names},
+        "surfaces": {name: {"status":"POSSIBLE" if name in possible_signals else ("NOT SCANNED" if scanned == 0 else "NOT DETECTED"), "evidence":possible_signals.get(name, []), "evidence_class":evidence_class(signals.get(name, [])), "interpretation":"REVIEW_LEAD_ONLY"} for name in all_signal_names},
     }
     status = "INCOMPLETE SCAN" if warnings else ("NOT SCANNED" if not files or not scanned else "COMPLETE")
-    return {"schema_version":2, "scan_status":status, "root":str(root), "file_count":len(files), "text_files_scanned":scanned, "languages":dict(sorted(languages.items())), "extensions":dict(sorted(by_ext.items())), "package_managers":paths_map(package_managers), "frameworks":detected_frameworks, "signals":possible_signals, "states":states, "risk_flags":sorted(set(risk_flags))[:50], "layer_hints":layer_hints, "warnings":warnings, "note":"Heuristic planning signals only. DETECTED means a stack marker was found, not that a vulnerability exists. Read representative code before deciding."}
+    return {"schema_version":3, "scan_status":status, "root":str(root), "file_count":len(files), "text_files_scanned":scanned, "languages":dict(sorted(languages.items())), "extensions":dict(sorted(by_ext.items())), "package_managers":paths_map(package_managers), "frameworks":detected_frameworks, "signals":possible_signals, "states":states, "risk_flags":sorted(set(risk_flags))[:50], "layer_hints":layer_hints, "warnings":warnings, "note":"Heuristic planning signals only. DETECTED means a stack marker was found, not confirmed technology use; DOCUMENTATION_ONLY is a weaker lead. Surface signals do not confirm a control or vulnerability. Read representative code before deciding."}
 
 
 def print_text(report: dict) -> None:

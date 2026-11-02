@@ -62,3 +62,9 @@ The real assessment, plan, preview, approved remediation, focused verification, 
 - F Documentation: PASS locally, with supported-agent runtime claims explicitly limited
 - G Demonstration: PARTIAL — actual assess/plan/preview/approved fix/verify run completed and evidence is preserved; no refusal scenario, pre-edit hashes, or network-isolated run
 - H Git release: PASS — implementation pushed to `main` and CI passed; no marketplace submission made
+
+## 2026-11-02 release candidate continuation
+
+Candidate work is on `release/security-coverage-v1-readiness`, based on `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. The local suite now contains 40 tests: all pass, with one Windows symlink capability skip. Docker `--network none` verification passed for detector/package only; image setup ran before isolation. Local Skills CLI v1.7.4 candidate discovery and disposable install passed. Candidate package is 22 files / 28,743 bytes / SHA-256 `c7ed79700fbe2bf7764c8132cdc8bc1a31582fc5ce924f4aebf9b7377bc11bfb`.
+
+Mandatory release gates remain open: strict host-level no-network-attempt evidence; actual runtime refusal, ambiguous approval, scope expansion, evidence scope, and resume/recovery cases; hosted candidate CI and Linux symlink run; fresh secret scan and full installer matrix. Therefore no merge/push to `main` and no Agensi submission. See `FINAL-PRODUCTION-RELEASE-REPORT.md` for details and any later candidate CI evidence.

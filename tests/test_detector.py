@@ -41,6 +41,8 @@ class DetectorTests(unittest.TestCase):
         self.assertEqual(result["frameworks"]["React"], ["package.json"])
         self.assertEqual(result["frameworks"]["Express"], ["package.json"])
         self.assertEqual(result["states"]["frameworks"]["Next.js"]["status"], "DETECTED")
+        self.assertEqual(result["states"]["frameworks"]["Next.js"]["evidence_class"], "SOURCE_OR_MANIFEST")
+        self.assertEqual(result["states"]["frameworks"]["Next.js"]["interpretation"], "HEURISTIC_MARKER_ONLY")
 
     def test_python_go_php_and_multistack(self):
         self.write("pyproject.toml", '[project]\ndependencies=["fastapi"]')
@@ -61,6 +63,26 @@ class DetectorTests(unittest.TestCase):
         result = detector.detect(self.root)
         self.assertNotIn("auth_session", result["signals"])
         self.assertNotIn("payments", result["signals"])
+
+    def test_documentation_only_marker_is_not_presented_as_confirmed_stack_use(self):
+        self.write("README.md", "Example only: `from fastapi import FastAPI`. This project does not use FastAPI.\n")
+        self.write("payments-notes.md", "The word stripe appears only in this documentation filename and notes.\n")
+        result = detector.detect(self.root)
+        fastapi = result["states"]["frameworks"]["FastAPI"]
+        self.assertEqual(fastapi["status"], "DETECTED")
+        self.assertEqual(fastapi["evidence_class"], "DOCUMENTATION_ONLY")
+        self.assertEqual(fastapi["interpretation"], "HEURISTIC_MARKER_ONLY")
+        self.assertEqual(result["states"]["surfaces"]["payments"]["evidence_class"], "DOCUMENTATION_ONLY")
+        self.assertIn("not confirmed technology use", result["note"])
+
+    def test_source_marker_takes_precedence_over_documentation_and_keeps_overlapping_frameworks(self):
+        self.write("package.json", '{"dependencies":{"next":"15","react":"19"}}')
+        self.write("README.md", "Example documentation: from fastapi import FastAPI\n")
+        result = detector.detect(self.root)
+        self.assertIn("Next.js", result["frameworks"])
+        self.assertIn("React", result["frameworks"])
+        self.assertEqual(result["states"]["frameworks"]["FastAPI"]["evidence_class"], "DOCUMENTATION_ONLY")
+        self.assertEqual(result["states"]["frameworks"]["React"]["evidence_class"], "SOURCE_OR_MANIFEST")
 
     def test_large_file_warns_and_marks_incomplete(self):
         self.write("large.py", "x" * (detector.MAX_FILE_BYTES + 1))
@@ -126,7 +148,7 @@ class DetectorTests(unittest.TestCase):
     def test_json_output_and_invalid_path_exit_codes(self):
         good = subprocess.run([sys.executable, str(SCRIPT), str(self.root), "--json"], capture_output=True, text=True)
         self.assertEqual(good.returncode, 0)
-        self.assertEqual(json.loads(good.stdout)["schema_version"], 2)
+        self.assertEqual(json.loads(good.stdout)["schema_version"], 3)
         bad = subprocess.run([sys.executable, str(SCRIPT), str(self.root / "missing")], capture_output=True, text=True)
         self.assertEqual(bad.returncode, 2)
         invalid = subprocess.run([sys.executable, str(SCRIPT), "--unsupported"], capture_output=True, text=True)
