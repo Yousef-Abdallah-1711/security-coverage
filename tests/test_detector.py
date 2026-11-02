@@ -113,7 +113,7 @@ class DetectorTests(unittest.TestCase):
         path = self.write("app.py", "print('x')")
         original_open = Path.open
         def fail_open(obj, *args, **kwargs):
-            if obj == path:
+            if os.path.normcase(os.path.abspath(obj)) == os.path.normcase(os.path.abspath(path)):
                 raise PermissionError("denied")
             return original_open(obj, *args, **kwargs)
         with mock.patch.object(Path, "open", fail_open):
