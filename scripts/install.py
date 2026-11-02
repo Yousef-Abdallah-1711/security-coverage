@@ -20,6 +20,14 @@ class InstallError(Exception):
     pass
 
 
+def print_safe(message: str, stream=None) -> None:
+    """Write paths safely even when the active Windows console encoding is legacy."""
+    target = stream if stream is not None else sys.stdout
+    encoding = getattr(target, "encoding", None) or "utf-8"
+    rendered = str(message).encode(encoding, errors="backslashreplace").decode(encoding)
+    print(rendered, file=target)
+
+
 def sha(path: Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as stream:
@@ -264,9 +272,9 @@ def main(argv=None) -> int:
                 base = Path(os.environ.get("CODEX_HOME") or (Path.home() / ".codex"))
             lines = uninstall(base) if args.uninstall else install(root, base, agent)
             for line in lines:
-                print(line)
+                print_safe(line)
     except (InstallError, OSError) as exc:
-        print("Installation failed safely: {}".format(exc), file=sys.stderr)
+        print_safe("Installation failed safely: {}".format(exc), stream=sys.stderr)
         return 1
     return 0
 

@@ -2,9 +2,12 @@
 
 ## Record
 
-- Schema version: 1
+- Schema version: 2
+- Plan ID:
 - Source strategy:
+- Source strategy schema version:
 - Plan date:
+- Time zone:
 - Phase count:
 - Highest risk:
 
@@ -22,7 +25,11 @@
 - Out of scope:
 - Task IDs:
 - Proposed commands and safety classes:
-- Approval required: yes, before implementation
+- Application changes (exact files):
+- Workflow documentation changes (exact files):
+- Verification commands (exact commands, safety class, expected side effects):
+- Network requirements (per command, exact approved destination or `NONE`):
+- Approval required: yes, separately covering application files, workflow documents, and verification commands before implementation
 - Side effects and network/database/production impact:
 - Acceptance criteria:
 - Verification and expected evidence:
@@ -41,3 +48,4 @@
 - Failed or skipped checks explained:
 - Residual risks accepted by:
 - Decision: NOT READY / READY WITH LIMITATIONS / READY
+- Decision date/time and time zone:

@@ -52,3 +52,14 @@ jobs:
           $errors = $null
           [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD 'install.ps1'), [ref]$tokens, [ref]$errors) | Out-Null
           if ($errors.Count -gt 0) { $errors | ForEach-Object { Write-Error $_ }; exit 1 }
+
+  offline-isolation:
+    name: Offline detector and package validation
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+      - name: Check offline test runner syntax
+        run: bash -n scripts/verify_offline.sh
+      - name: Build prerequisites, then verify in networkless container
+        run: scripts/verify_offline.sh

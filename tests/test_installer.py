@@ -1,4 +1,5 @@
 import importlib.util
+import io
 import os
 import tempfile
 import unittest
@@ -58,6 +59,13 @@ class InstallerTests(unittest.TestCase):
         installer.uninstall(self.base)
         installer.uninstall(self.base)
         self.assertFalse((self.base / installer.MANIFEST).exists())
+
+    def test_output_escapes_paths_not_representable_by_console_encoding(self):
+        buffer = io.BytesIO()
+        stream = io.TextIOWrapper(buffer, encoding="cp1252")
+        installer.print_safe("Installed files to C:/安全", stream=stream)
+        stream.flush()
+        self.assertIn(b"C:/\\u5b89\\u5168", buffer.getvalue())
 
     def test_update_backs_up_prior_managed_version(self):
         installer.install(ROOT, self.base, "claude")

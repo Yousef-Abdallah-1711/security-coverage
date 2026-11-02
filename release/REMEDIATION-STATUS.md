@@ -32,3 +32,43 @@ Baseline: `d003f4805dea8686a00205c6bf1efb03399a3ba5` (2026-11-01 audit). Impleme
 | SEC-012 doc separation | DONE | End-user and contributor docs separated; sensitive Git token examples removed |
 | SEC-013 framework profiles | DEFERRED | No evidence supports adding profiles for v1 |
 | SEC-014 schema version/migration | PARTIAL | Schema version fields added; migration guidance for historic user reports remains unimplemented |
+
+## 2026-11-02 final-candidate revalidation
+
+The release-candidate continuation is **NOT READY** for `main`. Local evidence: 40 unit tests pass with one Windows symlink capability skip; package source validation passes; Docker offline detector/package check passes with network probe blocked; Python 3.8 AST parse, Bash syntax, PowerShell parse, JSON parse, diff whitespace, local Skills CLI 1.7.4 discovery/install, and candidate Agensi ZIP checks pass. See `FINAL-PRODUCTION-RELEASE-REPORT.md` for exact scope and current hashes.
+
+Still open: strict host-level agent network isolation/no-attempt; runtime refusal/no-response/ambiguous/changed-scope and evidence-scope scenarios; resume/recovery runtime scenarios; fresh Linux symlink and hosted candidate CI evidence; full installer matrix; secret scan; Claude and third-party agent runtime coverage. Historical Codex startup catalog requests were blocked with HTTP 401 but still count as attempts for the strict no-attempt gate.
+
+The current candidate is not merged to `main`. Do not claim production readiness or submit to Agensi. Candidate branch and hosted CI details, if produced, are recorded in the final release report.
+
+## Candidate hosted verification update
+
+Release candidate commit `2c58ae308a887082976c9456e11a394fbbb97f36` is pushed; draft PR #1 targets `main`. Hosted Actions run 41391053531 passed all 9 jobs, including Linux symlink and offline container verification. Initial run 41390992201 failed because `scripts/verify_offline.sh` lacked the executable bit; this was fixed on the branch and the rerun passed. The Skills CLI remote candidate installation succeeded from a temporary no-slash ref at the same SHA. These results do not close agent-host network, refusal, evidence, resume, or compatibility gates. `main` must remain unchanged.
+
+Final report/evidence candidate HEAD `961fd1490baaf6704f3e03ea004562efc8e1462c` passed all 9 jobs in run 41391292195. Main remains unchanged because security/workflow gates are open.
+
+## 2026-11-02 runtime acceptance follow-up
+
+The current host cannot supply the required agent egress boundary: the Windows session is not an administrator, no enforcing HTTP(S) proxy is configured, and no offline local-model runtime is installed. Claude Code 2.1.177 and Codex CLI 0.166.0-alpha.5.1 are installed, but no new agent workflow was launched without enforcement. Therefore explicit refusal, no approval, ambiguous approval, scope expansion, evidence-scope, and fresh-session resume/recovery scenarios are BLOCKED/NOT RUN; historical Codex evidence remains limited to the approved demo and one hostile-note case. No runtime response or before/after agent hash has been fabricated.
+
+Fresh installer matrix found that Python could complete a Unicode-path install but then fail while printing the success path under cp1252. `scripts/install.py` now escapes unrepresentable output characters; regression test added. Fresh test commands/results: installer tests 9/9 pass; full suite 41 passed, 0 failed, 1 Windows symlink skip. Disposable smoke commands passed: `bash install.sh --local` and repeat/uninstall; `bash install.sh --local --claude`; PowerShell `install.ps1 -Local -Codex`; PowerShell default/global install and repeated uninstall. Tests used `PYTHONIOENCODING=cp1252`, a Unicode/space temp path, and temporary `USERPROFILE`/`CODEX_HOME`. Collision, rollback, modified-file, traversal, and backup-on-update cases pass in unit tests.
+
+Candidate fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all 9 jobs in Actions run 41392637814, including Ubuntu/Windows Python matrix, Linux symlink coverage, shell/PowerShell syntax, and offline detector/package validation. Package rebuild/check passes: 22 files, 28,743 bytes, SHA-256 `c7ed79700fbe2bf7764c8132cdc8bc1a31582fc5ce924f4aebf9b7377bc11bfb`.
+
+Mandatory runtime/network gates remain open, so PR #1 remains draft and main stays at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. Dedicated secret scanning and current public-main Skills CLI installation are not verified. No Agensi submission was made.
+
+## Secret scan result
+
+Gitleaks v8.30.1 was verified against the official release asset digest, run with full redaction on the candidate worktree, package archive, and all-ref Git history. Each scan exited 0 with 0 findings. Scanner and redacted reports were kept in temporary storage, not committed. Runtime acceptance/network gates remain blocked; this does not authorize a main merge.
+
+## Final acceptance snapshot (2026-11-02)
+
+- Candidate HEAD `be9815390541ffd3f509bdfca11041181dcb77fc`; latest hosted run 41393283842 passed all nine jobs.
+- Fresh local tests: 41 pass, 0 fail, one Windows symlink capability skip. Fresh installer matrix passes across Bash/PowerShell, local/global, Claude-only/Codex-only, update/uninstall/repeated uninstall, and Unicode/space paths.
+- Gitleaks 8.30.1: zero findings in worktree, all-ref Git history, and Agensi ZIP, with redaction enabled.
+- Agent runtime gates are BLOCKED because the host cannot enforce egress and no local model runtime exists. No new agent scenarios are claimed as passed.
+- PR #1 remains draft. Main is unchanged at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No Agensi submission occurred.
+
+## Owner release decision (2026-11-02)
+
+The owner explicitly accepted the documented runtime limitations and authorized publishing the current tested candidate. This supersedes prior historical `NOT READY`/do-not-merge statements in this status log. Classification: **INITIAL PUBLIC RELEASE — KNOWN VERIFICATION LIMITATIONS**. Automated tests, hosted CI, installer matrix, and secret scan have passed; live refusal, evidence-scope, prompt-injection, resume/recovery, strict host network isolation, and full Claude/other runtime verification remain unverified. No Agensi submission was made. See `FINAL-PRODUCTION-RELEASE-REPORT.md` for the closure record.

@@ -2,12 +2,15 @@
 
 ## Record
 
-- Schema version: 1
+- Schema version: 2
+- Record ID:
 - Repository:
 - Assessment date:
+- Time zone:
 - Assessor:
 - Overall status: VERIFIED / PARTIALLY VERIFIED / UNVERIFIED / BLOCKED
 - Scope and exclusions:
+- Source commit/ref (if available):
 
 ## Stack and Entry Points
 
@@ -31,7 +34,7 @@
 
 ## Findings
 
-| ID | Layer | Severity | Status | Evidence (file:line) | Affected files | Recommended action | Residual risk / owner |
+| Finding ID | Layer | Severity | Verification status | Evidence (file:line) | Affected files | Recommended action | Residual risk | Risk owner |
 |---|---|---|---|---|---|---|---|
 
 Severity: CRITICAL / HIGH / MEDIUM / LOW / INFORMATIONAL. Status: VERIFIED / PARTIALLY VERIFIED / UNVERIFIED / NOT APPLICABLE / BLOCKED.
@@ -41,7 +44,7 @@ Severity: CRITICAL / HIGH / MEDIUM / LOW / INFORMATIONAL. Status: VERIFIED / PAR
 | Layer | Verdict (ADOPT/PARTIAL/DEFER/SKIP) | Reason | Evidence | Revisit trigger / owner |
 |---|---|---|---|---|
 
-Record S0 through S11, including reason and revisit trigger for every deferred or skipped layer.
+Record S0 through S11, including reason and revisit trigger and owner for every deferred or skipped layer.
 
 ## Assumptions and Open Questions
 
