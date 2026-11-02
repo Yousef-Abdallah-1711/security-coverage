@@ -113,13 +113,13 @@ class DetectorTests(unittest.TestCase):
         original_open = Path.open
         intercepted = []
         def fail_open(file, *args, **kwargs):
-            if file == path:
-                intercepted.append(file)
+            if file.name == path.name:
+                intercepted.append(file.name)
                 raise PermissionError("denied")
             return original_open(file, *args, **kwargs)
         with mock.patch.object(Path, "open", fail_open):
             result = detector.detect(self.root)
-        self.assertEqual(intercepted, [path])
+        self.assertEqual(intercepted, [path.name])
         self.assertEqual(result["scan_status"], "INCOMPLETE SCAN")
         self.assertTrue(any("Unreadable file" in item for item in result["warnings"]))
 
