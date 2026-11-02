@@ -137,7 +137,7 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 | A — Repository integrity | PASS for preserved local candidate | Backup reported verified; remote main was fetched and remained at the baseline; candidate diff reviewed. |
 | B — Architecture | PASS locally | Single skill, references, templates, detector, package validation pass. |
 | C — Security | FAIL | Strict host-network no-attempt gate and required agent refusal/injection behavior are not fully evidenced. |
-| D — Testing | PASS | 41 local tests pass (one Windows symlink capability skip); fix commit `3a7689a` passed all 9 jobs in run 41392637814, including Linux symlink coverage and offline validation. |
+| D — Testing | PASS | 41 local tests pass (one Windows symlink capability skip); fix commit `3a7689a` passed all 9 jobs in run 41392637814, and final evidence head `be98153` passed all 9 jobs in run 41393283842. |
 | E — Distribution | PASS for candidate | Local and remote candidate Skills CLI install and package validation pass. Published-main install remains unavailable until a permitted merge. |
 | F — Documentation | PARTIAL | Major scope/compatibility disclosures updated; full README rendering and all advertised command matrix not freshly checked. |
 | G — Workflow demonstration | PARTIAL | Approved demo exists; refusal, evidence-scope variants, and resume/recovery scenarios are open. |
@@ -145,7 +145,7 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 
 ## R. Git delivery
 
-Candidate branch `release/security-coverage-v1-readiness` is pushed. Fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all nine jobs in run [41392637814](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392637814); report/evidence follow-up HEAD `0212bbd784205938910cbbb3eac0a2f0af7be120` also passed all nine jobs in run [41392861038](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392861038). PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) remains draft and targets `main`. Main and origin/main remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail.
+Candidate branch `release/security-coverage-v1-readiness` is pushed; latest tested head is `be9815390541ffd3f509bdfca11041181dcb77fc`. Fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all nine jobs in run [41392637814](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392637814), and latest report/secret-scan evidence head `be98153` passed all nine jobs in run [41393283842](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41393283842). PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) remains draft and targets `main`. Main and origin/main remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory runtime/network gates fail.
 
 ## S. Remaining risks
 
@@ -157,8 +157,8 @@ Candidate branch `release/security-coverage-v1-readiness` is pushed. Fix commit 
 
 ## T. Final decision
 
-**NOT READY.** Mandatory security and workflow gates are open. Do not merge this candidate to `main`, claim production readiness, or submit to Agensi.
+**BLOCKED.** The required agent runtime acceptance and strict network contract cannot be tested in this non-administrator session without an offline model runtime. Do not merge this candidate to `main`, claim production readiness, or submit to Agensi.
 
 ## U. Owner next steps
 
-After the mandatory gates are closed and the release candidate passes hosted CI, review and merge its PR through the repository's protected workflow. Then rebuild and verify the package from final `main`, recompute its SHA-256, confirm the published Skills CLI install, and have the owner submit `dist/security-coverage-agensi.zip` with the reviewed `marketplace/listing.md` and demo materials. No Agensi submission was made by this task.
+Provide an offline-capable agent runtime or an owner-approved enforced egress test boundary for the model runtime, then run and preserve the actual refusal, evidence-included/excluded, prompt-injection, and resume/recovery scenarios. After every mandatory gate passes, move PR #1 from draft to review and merge through the repository's protected workflow. Then rebuild and verify the package from final `main`, recompute its SHA-256, confirm the published Skills CLI install, and have the owner submit `dist/security-coverage-agensi.zip` with the reviewed `marketplace/listing.md` and demo materials. No Agensi submission was made by this task.

@@ -96,3 +96,11 @@ Runtime refusal/resume/evidence scope tests were not run: this Windows session i
 Official Gitleaks Windows release v8.30.1 was downloaded to a temporary directory, and its ZIP SHA-256 matched the official GitHub release asset digest. With `--redact=100`, `gitleaks dir` scanned the candidate worktree and Agensi ZIP, and `gitleaks git --log-opts=--all` scanned history across refs. All three completed with exit code 0 and zero findings. No scanner binary or report was added to the repository; reports are redacted temporary files.
 
 This closes the secret-scan check only. The enforced agent network boundary and real runtime refusal/evidence/resume tests remain blocked, so PR #1 remains draft and `main` is unchanged.
+
+## Final runtime acceptance state (2026-11-02)
+
+Current tested candidate head `be9815390541ffd3f509bdfca11041181dcb77fc` passed all nine jobs in Actions run [41393283842](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41393283842). GitHub PR #1 remains draft. `main` and `origin/main` remain `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`.
+
+Gitleaks 8.30.1, downloaded to temporary storage from the official release and checksum-verified, reported zero findings in the worktree, all-ref Git history, and Agensi package ZIP. The fresh Windows installer matrix and 41-test local suite pass; Linux symlink coverage passes in hosted CI.
+
+Runtime acceptance remains blocked: the host is non-administrator, has no enforcing proxy configured, and has no offline local model runtime. No agent refusal, no-approval, ambiguity, scope expansion, evidence-scope, or fresh-session recovery test was run in this environment. These scenarios are not passed, and no merge to main or Agensi submission occurred.

@@ -60,3 +60,11 @@ Mandatory runtime/network gates remain open, so PR #1 remains draft and main sta
 ## Secret scan result
 
 Gitleaks v8.30.1 was verified against the official release asset digest, run with full redaction on the candidate worktree, package archive, and all-ref Git history. Each scan exited 0 with 0 findings. Scanner and redacted reports were kept in temporary storage, not committed. Runtime acceptance/network gates remain blocked; this does not authorize a main merge.
+
+## Final acceptance snapshot (2026-11-02)
+
+- Candidate HEAD `be9815390541ffd3f509bdfca11041181dcb77fc`; latest hosted run 41393283842 passed all nine jobs.
+- Fresh local tests: 41 pass, 0 fail, one Windows symlink capability skip. Fresh installer matrix passes across Bash/PowerShell, local/global, Claude-only/Codex-only, update/uninstall/repeated uninstall, and Unicode/space paths.
+- Gitleaks 8.30.1: zero findings in worktree, all-ref Git history, and Agensi ZIP, with redaction enabled.
+- Agent runtime gates are BLOCKED because the host cannot enforce egress and no local model runtime exists. No new agent scenarios are claimed as passed.
+- PR #1 remains draft. Main is unchanged at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No Agensi submission occurred.
