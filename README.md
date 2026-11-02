@@ -77,15 +77,39 @@ The Agent Skills format is open, but each agent differs in discovery, tool permi
 
 Read the authorized repository, inspect representative code, and write `docs/security/SECURITY-STRATEGY.md`. Assessment may create that report, but must not change application code/configuration. Scanner output is only a lead; findings require code evidence.
 
+Invoke the installed command adapter with:
+
+```text
+/security-assess
+```
+
+Or ask the installed `security-coverage` skill in natural language: “Assess this repository’s security and write the strategy.”
+
 ### `security-plan`
 
 Require a usable strategy. Write `docs/security/SECURITY-PLAN.md`, `SECURITY-TASKS.md`, and an empty evidence log. Planning does not authorize implementation.
+
+Invoke the installed command adapter with:
+
+```text
+/security-plan
+```
+
+Or ask: “Turn the security strategy into a prioritized implementation plan.”
 
 ### `security-implement`
 
 Require a complete plan and explicit approval for the specific phase and files. The agent must show phase/task IDs, scope, commands and safety classes, side effects, rollback, and verification before asking. No approval means no changes.
 
-The repository includes `commands/security-{assess,plan,implement}.md` adapters. They are short prompts that route to the canonical skill, not independent copies of the workflow.
+Ask for a preview first:
+
+```text
+/security-implement
+```
+
+After reviewing the preview, approve only the listed phase, application files, workflow-document files, and verification commands. For example: “Approve only PHASE-001 with the exact files and commands listed in the preview.” If you do not approve, say: “No. Do not implement this phase.”
+
+These slash commands are available only in agents where the command adapters are installed and supported. Otherwise, invoke the single `security-coverage` skill with the natural-language requests above. The repository includes `commands/security-{assess,plan,implement}.md` adapters; they route to the canonical skill and are not independent copies of the workflow.
 
 ## Installation methods
 
@@ -197,10 +221,6 @@ python scripts/build_agensi_package.py --check
 For a repeatable offline check of the detector and package builder, run `scripts/verify_offline.sh` with Docker available. The script downloads/builds the Python test image before the check; its verification container runs with `--network none`, a read-only repository mount, and a temporary writable directory. The egress probe is expected to be blocked. This isolates these local tools, not an agent host or model API connection.
 
 The skill’s layer coverage is a review aid. It can miss issues, produce false leads, and cannot establish the safety of systems it cannot inspect. Framework signals and generated documents do not replace expert review or real verification.
-
-## Agensi marketplace
-
-The repository contains a package builder and listing materials under `marketplace/`. The package is prepared for review but is **not submitted or published**. No marketplace listing URL is claimed until one exists.
 
 ## Troubleshooting
 
