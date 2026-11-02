@@ -1,4 +1,5 @@
 import importlib.util
+import io
 import json
 import os
 import subprocess
@@ -111,13 +112,12 @@ class DetectorTests(unittest.TestCase):
 
     def test_unreadable_file_warning(self):
         path = self.write("app.py", "print('x')")
-        path_class = type(path)
-        original_open = path_class.open
-        def fail_open(obj, *args, **kwargs):
-            if os.path.normcase(os.path.abspath(obj)) == os.path.normcase(os.path.abspath(path)):
+        original_open = io.open
+        def fail_open(file, *args, **kwargs):
+            if os.path.normcase(os.path.abspath(file)) == os.path.normcase(os.path.abspath(path)):
                 raise PermissionError("denied")
-            return original_open(obj, *args, **kwargs)
-        with mock.patch.object(path_class, "open", fail_open):
+            return original_open(file, *args, **kwargs)
+        with mock.patch("io.open", fail_open):
             result = detector.detect(self.root)
         self.assertEqual(result["scan_status"], "INCOMPLETE SCAN")
         self.assertTrue(any("Unreadable file" in item for item in result["warnings"]))
