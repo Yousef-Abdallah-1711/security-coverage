@@ -47,7 +47,7 @@ The distribution has one canonical `skills/security-coverage/SKILL.md`, with thi
 - Approval preview contract: PASS in automated contract tests.
 - Explicit refusal/no response/ambiguous approval/expanded scope: NOT VERIFIED in an actual agent runtime.
 - Prompt injection: PARTIALLY VERIFIED by the historical synthetic Codex demo; no fresh complete matrix.
-- Secret handling: no credentials were intentionally added. A dedicated secret scanner result is NOT VERIFIED for this candidate.
+- Secret handling: PASS. Gitleaks 8.30.1 scanned the worktree (including the package archive) and Git history across refs with redaction enabled; zero findings.
 - Host network policy: FAIL for the strict no-attempt requirement. The historical Codex run logged host plugin-catalog requests returning HTTP 401. No successful response was observed, and the requests were attributed to host startup rather than skill logic. A blocked or unauthorized attempt still does not satisfy a strict no-attempt gate.
 - Runtime boundary blocker: the current Windows session is not elevated (`IS_ADMIN=False`), no `HTTPS_PROXY`/`HTTP_PROXY` is configured, and no local model runtime (`ollama`, `llama-server`, LM Studio, or similar CLI) was found. Claude Code `2.1.177` and Codex CLI `0.166.0-alpha.5.1` are installed, but their model sessions require external connectivity. No runtime scenario was launched without an enforced boundary; no new agent behavior is claimed.
 
@@ -100,7 +100,7 @@ Fresh installer matrix passed after adding `print_safe()` to escape path charact
 | `python -m compileall -q scripts skills tests` | PASS. |
 | `C:\Program Files\Git\bin\bash.exe scripts/verify_offline.sh` | PASS: probe blocked, detector complete, package/ZIP integrity valid; setup prerequisites were available before isolation. |
 | Python 3.8 AST parse / Bash syntax / PowerShell parse / JSON | PASS: 11 Python files parsed with Python 3.8 grammar; Bash, PowerShell AST, and plugin JSON checks passed. |
-| Dedicated secret scan | NOT VERIFIED: `gitleaks` is not installed. |
+| Gitleaks 8.30.1 | PASS: worktree, all-ref Git history, and Agensi ZIP scans reported 0 findings; redaction was enabled. Official Windows release archive SHA-256 matched the release API digest. |
 
 ## L. GitHub Actions
 
@@ -145,7 +145,7 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 
 ## R. Git delivery
 
-Candidate branch `release/security-coverage-v1-readiness` is pushed. Fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all nine PR checks in run [41392637814](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392637814). PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) remains draft and targets `main`. Main and origin/main remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail.
+Candidate branch `release/security-coverage-v1-readiness` is pushed. Fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all nine jobs in run [41392637814](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392637814); report/evidence follow-up HEAD `0212bbd784205938910cbbb3eac0a2f0af7be120` also passed all nine jobs in run [41392861038](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392861038). PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) remains draft and targets `main`. Main and origin/main remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail.
 
 ## S. Remaining risks
 
@@ -153,7 +153,7 @@ Candidate branch `release/security-coverage-v1-readiness` is pushed. Fix commit 
 2. Runtime approval refusal, ambiguity, scope expansion, evidence inclusion/exclusion, and interruption recovery remain unverified.
 3. Candidate hosted CI and Linux symlink requirements passed; they do not verify agent refusal/resume behavior.
 4. Claude Code and other agent runtime compatibility is not established.
-5. Dedicated secret scanning remains unverified. The fresh installer matrix passed on Windows; the candidate code fix also passed hosted Windows/Linux CI.
+5. The fresh installer matrix passed on Windows; the candidate code fix also passed hosted Windows/Linux CI. Secret scanning found no matches.
 
 ## T. Final decision
 

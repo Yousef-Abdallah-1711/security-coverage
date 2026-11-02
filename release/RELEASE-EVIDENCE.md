@@ -90,3 +90,9 @@ The fresh disposable installer matrix exposed a cp1252 console error after Unico
 Hosted Actions run 41392637814 passed all 9 jobs on fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7`, including Linux symlink and offline detector/package jobs.
 
 Runtime refusal/resume/evidence scope tests were not run: this Windows session is not elevated, no enforcing proxy is configured, and no offline local model exists. A network-enabled cloud agent test without an enforced egress policy would not satisfy the mandatory network gate. The host-boundary, runtime, and dedicated secret-scan gates remain open; main remains unchanged and PR #1 remains draft.
+
+## 2026-11-02 secret scan verification
+
+Official Gitleaks Windows release v8.30.1 was downloaded to a temporary directory, and its ZIP SHA-256 matched the official GitHub release asset digest. With `--redact=100`, `gitleaks dir` scanned the candidate worktree and Agensi ZIP, and `gitleaks git --log-opts=--all` scanned history across refs. All three completed with exit code 0 and zero findings. No scanner binary or report was added to the repository; reports are redacted temporary files.
+
+This closes the secret-scan check only. The enforced agent network boundary and real runtime refusal/evidence/resume tests remain blocked, so PR #1 remains draft and `main` is unchanged.

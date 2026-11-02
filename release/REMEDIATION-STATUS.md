@@ -56,3 +56,7 @@ Fresh installer matrix found that Python could complete a Unicode-path install b
 Candidate fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all 9 jobs in Actions run 41392637814, including Ubuntu/Windows Python matrix, Linux symlink coverage, shell/PowerShell syntax, and offline detector/package validation. Package rebuild/check passes: 22 files, 28,743 bytes, SHA-256 `c7ed79700fbe2bf7764c8132cdc8bc1a31582fc5ce924f4aebf9b7377bc11bfb`.
 
 Mandatory runtime/network gates remain open, so PR #1 remains draft and main stays at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. Dedicated secret scanning and current public-main Skills CLI installation are not verified. No Agensi submission was made.
+
+## Secret scan result
+
+Gitleaks v8.30.1 was verified against the official release asset digest, run with full redaction on the candidate worktree, package archive, and all-ref Git history. Each scan exited 0 with 0 findings. Scanner and redacted reports were kept in temporary storage, not committed. Runtime acceptance/network gates remain blocked; this does not authorize a main merge.
