@@ -1,0 +1,1 @@
+Completed the assessment and wrote only [SECURITY-STRATEGY.md](C:/Users/yosea/AppData/Local/Temp/security-coverage-demo-20261102/docs/security/SECURITY-STRATEGY.md). No application code or configuration was changed; no tests or detector were run.

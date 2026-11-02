@@ -1,84 +1,27 @@
 # Security Layers
 
-Use these layers to decide scope and phase order. Every layer receives one verdict:
+Use the layers to scope review, not to assert security. For each layer record a verdict: `ADOPT`, `PARTIAL`, `DEFER`, or `SKIP`. A missing repository signal is not proof that the layer is absent. Every finding distinguishes observed evidence from a hypothesis.
 
-- `ADOPT`: implement and gate now.
-- `PARTIAL`: implement the most important subset now and document the gap.
-- `DEFER`: intentionally postpone with owner/date/trigger.
-- `SKIP`: not relevant to this repo or deployment model.
+| Layer | Objective and applicability | Discovery / expected evidence | Verification and failure conditions | Residual risk |
+|---|---|---|---|---|
+| S0 Inventory & attack surface | Know exposed entry points and trust boundaries; applies to every runnable system | Routes, APIs, jobs, webhooks, uploads, storage, CI/CD, external services, actors, assets; cite paths and route definitions | Compare deployment/docs/config against discovered surfaces. Fail if an exposed surface has no owner or scope | List inaccessible systems and assumptions; assign owner and revisit trigger |
+| S1 Secrets, config, environment | Keep credentials private and defaults safe | Env loading, examples, build variables, debug settings, committed key names only | Inspect representative secret flows without printing values; fail on confirmed exposed credential, unsafe default, or missing rotation plan | Record suspected exposure without echoing value; owner handles rotation out of band |
+| S2 Authentication and sessions | Ensure identity and recovery flows are correctly enforced | Login/logout/reset/OAuth/magic links, admin auth, cookies, session storage | Trace server checks; verify expiry, rotation, secure cookie flags, rate limits and error behavior where applicable. Fail on bypass or insecure privileged session | Note provider behavior or flows not exercised |
+| S3 Authorization and tenant isolation | Enforce action/resource/tenant policy on the server | Build role × action × resource matrix; cite middleware/controller/policy | For adopted actions record at least one permitted and one denied case, including anonymous/owner/non-owner/admin as relevant. Fail on cross-tenant or unauthorized write/read | Record untested roles/resources with owner |
+| S4 Input validation and API protection | Safely handle untrusted input and outbound requests | Methods, schemas, content types, body limits, upload paths, file/shell inputs, external HTTP | Trace server-side validation, encoding, SSRF controls and safe errors. Fail on unbounded or unvalidated sensitive input path | Record untested endpoints and external-service assumptions |
+| S5 Database and data access | Align data access with authorization and confidentiality | Queries, migrations, service keys, RLS/policies, storage buckets, sensitive columns | Inspect query parameterization and policy tests for relevant roles. Fail if privileged client-facing access or policy gap is confirmed | Record schema/policy drift and untested roles |
+| S6 Payments and webhooks | Protect money-state transitions | Providers, webhook routes, state machine, amount/currency source, admin actions | Verify signatures before state changes, idempotency/replay handling, server-side amounts, admin audit. Fail on client-controlled paid state or unauthenticated transition | Note provider sandbox/manual checks not performed |
+| S7 Browser security | Prevent browser context from bypassing server controls | Rendering sinks, forms, cookies, headers, redirects, third-party scripts | Verify escaping at render point, CSRF protection, CSP/security headers, safe links. Fail on confirmed exploitable injection/state change | Record browser/provider compatibility not tested |
+| S8 Infrastructure and deployment | Prevent exposure through deployment/configuration | Web roots, backup files, container ports, TLS/proxy, CI permissions/secrets, storage | Review deployed config and permissions; fail on public private files, exposed service, or overly broad deploy credential | Record production access unavailable and owner |
+| S9 Abuse prevention | Bound automated abuse and resource consumption | Auth/reset/signup/payment attempts, expensive endpoints, spam, uploads | Verify scoped limits and observable rejection behavior with safe local tests. Fail if sensitive/expensive action is unbounded without documented rationale | Record thresholds and monitoring gaps |
+| S10 Logging, monitoring, backup and recovery | Detect incidents and restore safely | Security events, redaction, alerts, retention, backup cadence and restore process | Review redacted examples and actual restore/rollback evidence. Fail if critical events leak secrets or recovery is claimed without evidence | Record restore test age, owner and next test date |
+| S11 Release gate | Make risk acceptance explicit | Adopted phase evidence, failed/skipped checks, residual risks, deployment plan, owner signoff | Fail when a mandatory gate lacks evidence, unexplained skip, owner, or rollback. Release decision must be based on recorded evidence | Keep accepted risk, approver, expiry/revisit trigger visible |
 
-## S0 Inventory & Attack Surface
+## Verdict guidance
 
-Proves the team knows what can be attacked.
+- `ADOPT`: in scope now; identify evidence and verification before implementation.
+- `PARTIAL`: only a named subset is covered now; state the gap and owner.
+- `DEFER`: relevant but postponed with owner, trigger/date, and risk.
+- `SKIP`: not applicable to the deployment model; give the reason.
 
-Look for routes, API endpoints, admin panels, cron jobs, webhooks, background workers, storage buckets, uploaded files, public directories, auth providers, databases, third-party services, and deployment boundaries.
-
-Skip only for non-runnable docs/templates with no deployed surface.
-
-## S1 Secrets, Config, And Environment
-
-Proves secrets are not committed or exposed and defaults fail closed.
-
-Check `.env*`, local config, committed keys, service-role tokens, debug flags, sample config, secret loading, and public build variables.
-
-Do not print secret values. Record names and file paths only.
-
-## S2 Authentication And Sessions
-
-Proves identity flows are protected.
-
-Check login, logout, session rotation, expiry, cookies, password reset, OAuth callbacks, admin login, rate limiting, and account recovery.
-
-## S3 Authorization And Roles
-
-Proves protected actions enforce role, tenant, ownership, and revocation rules.
-
-Check anonymous access, ordinary users, admins, inactive users, cross-tenant access, direct object access, and backend enforcement.
-
-## S4 Input Validation And API Protection
-
-Proves untrusted input is validated and rejected safely.
-
-Check request methods, content types, body size, schema validation, normalization, output encoding, command/file path handling, and error responses.
-
-## S5 Database, Supabase, RLS, And Data Access
-
-Proves data access rules match authorization.
-
-Check migrations, policies, service-role usage, client-side queries, backups, indexes for policy predicates, and sensitive columns.
-
-## S6 Payments, Webhooks, And Admin Money Flows
-
-Proves money state changes are authentic, idempotent, audited, and admin-only.
-
-Check webhook signatures, replay handling, manual payment marking, idempotency keys, amount/currency trust, admin access, and audit logs.
-
-## S7 Browser Security
-
-Proves the browser cannot become a privilege escalation path.
-
-Check XSS, CSRF, CSP, cookie flags, unsafe links, iframe policy, mixed content, third-party scripts, and DOM injection.
-
-## S8 Infrastructure, Deploy, And File Permissions
-
-Proves deploy configuration does not expose private files or unsafe services.
-
-Check web roots, `.git` exposure, backups, local credentials, logs, upload dirs, chmod, server config, TLS, cron, containers, and CI variables.
-
-## S9 Abuse Protection
-
-Proves expensive or sensitive actions resist brute force and spam.
-
-Check rate limits, CAPTCHA alternatives, lockouts, email abuse, payment retries, signup abuse, password reset abuse, and resource exhaustion.
-
-## S10 Logging, Monitoring, Backups, Rollback
-
-Proves incidents can be detected and recovered.
-
-Check security events, redaction, alerting, backup freshness, restore test, rollback path, retention, and incident contact.
-
-## S11 Final Release Gate
-
-Proves selected layers have evidence and accepted residual risk.
-
-Require all adopted phase gates, unresolved-risk table, deployment checklist, owner signoff, and rollback plan.
+Do not expand this matrix with generic controls that have no applicable asset or threat story. Use domain references for focused checks and the stack map for technology leads; neither is proof of a finding.

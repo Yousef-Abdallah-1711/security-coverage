@@ -6,170 +6,28 @@ param(
   [switch]$Help
 )
 
-$ErrorActionPreference = "Stop"
-$PluginName = "security-coverage"
-$Commands = @("security-assess", "security-plan", "security-implement")
-$CommandSkills = @("security-assess", "security-plan", "security-implement")
-$RootDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-
-function Show-Usage {
-  Write-Host @"
-security-coverage installer
-
-Usage:
-  .\install.ps1 [options]
-
-Options:
-  -Claude       install Claude commands and skill only
-  -Codex        install Codex commands, skill, and plugin files only
-  -Local        install into the current project (.\.claude and/or .\.codex)
-  -Uninstall    remove installed files
-  -Help         show this help
-
-Default:
-  .\install.ps1 installs globally for both Claude and Codex.
-"@
+$ErrorActionPreference = 'Stop'
+$Python = Get-Command python -ErrorAction SilentlyContinue
+$PythonArgs = @()
+if ($Python) {
+  & $Python.Source -c 'import sys; raise SystemExit(sys.version_info < (3, 8))' *> $null
+  if ($LASTEXITCODE -ne 0) { $Python = $null }
 }
-
-if ($Help) {
-  Show-Usage
-  exit 0
-}
-
-if (-not $Claude -and -not $Codex) {
-  $Claude = $true
-  $Codex = $true
-}
-
-function Copy-DirReplace {
-  param([string]$Source, [string]$Destination)
-  if (Test-Path $Destination) {
-    Remove-Item $Destination -Recurse -Force
-  }
-  New-Item -ItemType Directory -Force -Path (Split-Path -Parent $Destination) | Out-Null
-  Copy-Item $Source $Destination -Recurse -Force
-}
-
-function Copy-PluginReplace {
-  param([string]$Destination)
-  if (Test-Path $Destination) {
-    Remove-Item $Destination -Recurse -Force
-  }
-  New-Item -ItemType Directory -Force -Path $Destination | Out-Null
-  New-Item -ItemType Directory -Force -Path "$Destination\.codex-plugin", "$Destination\commands", "$Destination\skills" | Out-Null
-  Copy-Item "$RootDir\.codex-plugin\plugin.json" "$Destination\.codex-plugin\plugin.json" -Force
-  Copy-Item "$RootDir\README.md", "$RootDir\LICENSE", "$RootDir\.gitignore", "$RootDir\.gitattributes", "$RootDir\install.sh", "$RootDir\install.ps1", "$RootDir\package.json" $Destination -Force
-  Copy-Item "$RootDir\commands\*" "$Destination\commands\" -Recurse -Force
-  Copy-Item "$RootDir\skills\*" "$Destination\skills\" -Recurse -Force
-  Copy-Item "$RootDir\security-assess", "$RootDir\security-plan", "$RootDir\security-implement" $Destination -Recurse -Force
-}
-
-function Install-Commands {
-  param([string]$Target)
-  New-Item -ItemType Directory -Force -Path $Target | Out-Null
-  foreach ($Command in $Commands) {
-    Copy-Item "$RootDir\commands\$Command.md" "$Target\$Command.md" -Force
+if (-not $Python) {
+  $Python = Get-Command py -ErrorAction SilentlyContinue
+  $PythonArgs = @('-3')
+  if ($Python) {
+    & $Python.Source -3 -c 'import sys; raise SystemExit(sys.version_info < (3, 8))' *> $null
+    if ($LASTEXITCODE -ne 0) { $Python = $null }
   }
 }
-
-function Assert-File {
-  param([string]$Path)
-  if (-not (Test-Path $Path -PathType Leaf)) {
-    throw "Missing expected file: $Path"
-  }
-}
-
-function Assert-Dir {
-  param([string]$Path)
-  if (-not (Test-Path $Path -PathType Container)) {
-    throw "Missing expected directory: $Path"
-  }
-}
-
-function Install-Claude {
-  if ($Local) {
-    $Base = Join-Path (Get-Location) ".claude"
-  } else {
-    $Base = Join-Path $HOME ".claude"
-  }
-
-  if ($Uninstall) {
-    Remove-Item "$Base\skills\$PluginName" -Recurse -Force -ErrorAction SilentlyContinue
-    foreach ($Skill in $CommandSkills) {
-      Remove-Item "$Base\skills\$Skill" -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    foreach ($Command in $Commands) {
-      Remove-Item "$Base\commands\$Command.md" -Force -ErrorAction SilentlyContinue
-    }
-    Write-Host "Removed Claude install from $Base"
-    return
-  }
-
-  Copy-DirReplace "$RootDir\skills\$PluginName" "$Base\skills\$PluginName"
-  foreach ($Skill in $CommandSkills) {
-    Copy-DirReplace "$RootDir\$Skill" "$Base\skills\$Skill"
-  }
-  Install-Commands "$Base\commands"
-  Assert-Dir "$Base\skills\$PluginName"
-  Assert-File "$Base\skills\$PluginName\SKILL.md"
-  foreach ($Skill in $CommandSkills) {
-    Assert-File "$Base\skills\$Skill\SKILL.md"
-  }
-  foreach ($Command in $Commands) {
-    Assert-File "$Base\commands\$Command.md"
-  }
-  Write-Host "Installed Claude files to $Base"
-}
-
-function Install-Codex {
-  if ($Local) {
-    $Base = Join-Path (Get-Location) ".codex"
-  } elseif ($env:CODEX_HOME) {
-    $Base = $env:CODEX_HOME
-  } else {
-    $Base = Join-Path $HOME ".codex"
-  }
-
-  if ($Uninstall) {
-    Remove-Item "$Base\skills\$PluginName", "$Base\plugins\$PluginName" -Recurse -Force -ErrorAction SilentlyContinue
-    foreach ($Skill in $CommandSkills) {
-      Remove-Item "$Base\skills\$Skill" -Recurse -Force -ErrorAction SilentlyContinue
-    }
-    foreach ($Command in $Commands) {
-      Remove-Item "$Base\commands\$Command.md" -Force -ErrorAction SilentlyContinue
-    }
-    Write-Host "Removed Codex install from $Base"
-    return
-  }
-
-  Copy-DirReplace "$RootDir\skills\$PluginName" "$Base\skills\$PluginName"
-  foreach ($Skill in $CommandSkills) {
-    Copy-DirReplace "$RootDir\$Skill" "$Base\skills\$Skill"
-  }
-  Copy-PluginReplace "$Base\plugins\$PluginName"
-  Install-Commands "$Base\commands"
-  Assert-Dir "$Base\skills\$PluginName"
-  Assert-File "$Base\skills\$PluginName\SKILL.md"
-  foreach ($Skill in $CommandSkills) {
-    Assert-File "$Base\skills\$Skill\SKILL.md"
-  }
-  Assert-File "$Base\plugins\$PluginName\.codex-plugin\plugin.json"
-  foreach ($Command in $Commands) {
-    Assert-File "$Base\commands\$Command.md"
-  }
-  Write-Host "Installed Codex files to $Base"
-}
-
-if ($Claude) {
-  Install-Claude
-}
-
-if ($Codex) {
-  Install-Codex
-}
-
-if ($Uninstall) {
-  Write-Host "Uninstall complete."
-} else {
-  Write-Host "Install complete."
-}
+if (-not $Python) { throw 'Security Coverage installer requires Python 3.8 or newer.' }
+$Installer = Join-Path $PSScriptRoot 'scripts/install.py'
+$Arguments = @($PythonArgs + $Installer)
+if ($Claude) { $Arguments += '--claude' }
+if ($Codex) { $Arguments += '--codex' }
+if ($Local) { $Arguments += '--local' }
+if ($Uninstall) { $Arguments += '--uninstall' }
+if ($Help) { $Arguments += '--help' }
+& $Python.Source @Arguments
+if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }

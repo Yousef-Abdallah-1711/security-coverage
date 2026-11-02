@@ -1,39 +1,28 @@
 {
   "name": "security-coverage",
-  "version": "0.1.0",
-  "description": "Security audit, hardening, and evidence workflow for production-ready applications.",
+  "version": "1.0.0",
+  "description": "Evidence-led security assessment, planning, and approved remediation workflow.",
   "author": {
-    "name": "Rakymat Plugins",
-    "url": "https://github.com/rakymat-plugins"
+    "name": "Yousef Abdallah",
+    "url": "https://github.com/Yousef-Abdallah-1711"
   },
-  "homepage": "https://github.com/rakymat-plugins/security-coverage",
-  "repository": "https://github.com/rakymat-plugins/security-coverage",
+  "homepage": "https://github.com/Yousef-Abdallah-1711/security-coverage",
+  "repository": "https://github.com/Yousef-Abdallah-1711/security-coverage",
   "license": "MIT",
-  "keywords": [
-    "security",
-    "audit",
-    "hardening",
-    "appsec",
-    "codex",
-    "claude"
-  ],
+  "keywords": ["security", "audit", "hardening", "appsec", "codex", "claude"],
   "skills": "./skills/",
   "interface": {
     "displayName": "Security Coverage",
-    "shortDescription": "Plan and execute layered security audits with evidence.",
-    "longDescription": "Security Coverage helps agents assess attack surface, plan security hardening, and implement safe, evidence-backed security phases across application stacks.",
-    "developerName": "Rakymat Plugins",
+    "shortDescription": "Assess, plan, and verify application security work.",
+    "longDescription": "A staged, evidence-focused workflow for reviewing application security, planning remediation, and implementing an explicitly approved phase.",
+    "developerName": "Yousef Abdallah",
     "category": "Developer Tools",
-    "capabilities": [
-      "Security",
-      "Code Review",
-      "Planning"
-    ],
-    "websiteURL": "https://github.com/rakymat-plugins/security-coverage",
+    "capabilities": ["Security", "Code Review", "Planning"],
+    "websiteURL": "https://github.com/Yousef-Abdallah-1711/security-coverage",
     "defaultPrompt": [
-      "Assess security coverage for this repo.",
-      "Plan security hardening phases.",
-      "Implement the next security phase safely."
+      "Assess security coverage for this repository.",
+      "Turn the security strategy into a prioritized plan.",
+      "Preview and implement an explicitly approved security phase."
     ],
     "brandColor": "#06B6D4"
   }
