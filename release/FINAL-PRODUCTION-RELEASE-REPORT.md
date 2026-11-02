@@ -171,8 +171,11 @@ The owner authorized publication of candidate `fe9735d783be6bc495843d724f18f3e04
 
 ### Final closure record
 
-- Final `main` SHA: pending.
-- PR #1 merge result: pending.
-- Post-merge GitHub Actions result: pending.
-- Public Skills CLI installation: pending.
-- Agensi archive file count, size, and SHA-256: pending.
+- Final `main` SHA at PR #1 release merge: `84cc96b4d060073f061d9bf76d3f845867afa27f`. This is the release-content merge SHA; this final report update is a documentation-only follow-up on `main`.
+- PR #1 merge result: MERGED by the normal GitHub merge workflow at `2026-11-02T05:39:36Z`; merge commit `84cc96b4d060073f061d9bf76d3f845867afa27f`: https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1
+- Post-merge GitHub Actions: PASS, run [41395309306](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41395309306), all 9 jobs successful on merge SHA `84cc96b4d060073f061d9bf76d3f845867afa27f`. PR-head CI also passed all 9 jobs on `fc54e658457e7770a001ff14c3648893e5a579fa` in run [41395192786](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41395192786).
+- Public Skills CLI: PASS. `npx.cmd --yes skills add Yousef-Abdallah-1711/security-coverage --skill security-coverage --agent codex --copy --yes` installed the published `main` skill in a disposable directory; exactly one skill and 21 skill files were installed. `SKILL.md` SHA-256: `93ec56d8bb4ab068c8f968eb00ad94eb8b23ad091813d028c7d91860a218f1`.
+- Agensi ZIP: `dist/security-coverage-agensi.zip`, rebuilt from `main` SHA `84cc96b4d060073f061d9bf76d3f845867afa27f`; ZIP integrity PASS, exactly one `SKILL.md`, 22 archive entries, 28,743 bytes, SHA-256 `3c4e459fc027165ce2308590029bad487a623330bf5f6fb77a5e4ecb32e699cd`. Not submitted to Agensi.
+
+
+README, cover/logo branding assets, and canonical skills/security-coverage/SKILL.md were verified present in the final release main tree. The release report is committed in a documentation-only follow-up on main; the release merge SHA above identifies the tested release contents.
