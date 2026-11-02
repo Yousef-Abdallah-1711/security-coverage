@@ -2,13 +2,15 @@
 
 **Report date:** 2026-11-02
 
-**Decision:** **NOT READY**
+**Release classification:** **INITIAL PUBLIC RELEASE — KNOWN VERIFICATION LIMITATIONS**
 
-**Agensi submission:** Not authorized and not performed.
+**Owner decision:** Publish the tested candidate with the limitations documented below.
+
+**Agensi submission:** Not performed. The package is not submitted or published there.
 
 ## A. Executive summary
 
-The candidate includes the approval/resume/migration and detector improvements, offline detector/package verification, README usage examples, and a fix for Unicode paths on legacy Windows console encodings. The fresh installer matrix and 41-test suite pass; the latest candidate CI run is recorded below. Runtime acceptance scenarios remain BLOCKED because this host cannot enforce the required agent egress boundary and has no local model runtime. Do not merge to `main` while those mandatory gates remain open.
+The candidate includes the approval/resume/migration and detector improvements, offline detector/package verification, README usage examples, and a fix for Unicode paths on legacy Windows console encodings. The owner authorized publishing the tested candidate to `main` while accepting the known limitations below. This is not a security certification or a claim of complete production verification. Missing runtime tests remain unverified; no security controls were weakened to obtain passing results.
 
 ## B. Repository recovery
 
@@ -141,11 +143,11 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 | E — Distribution | PASS for candidate | Local and remote candidate Skills CLI install and package validation pass. Published-main install remains unavailable until a permitted merge. |
 | F — Documentation | PARTIAL | Major scope/compatibility disclosures updated; full README rendering and all advertised command matrix not freshly checked. |
 | G — Workflow demonstration | PARTIAL | Approved demo exists; refusal, evidence-scope variants, and resume/recovery scenarios are open. |
-| H — GitHub release | PASS for candidate CI / BLOCKED for main delivery | Candidate is committed, PR checks pass, and branch is clean/mergeable. PR #1 remains draft; security/workflow gates prohibit merging to main. |
+| H — GitHub release | Owner authorized publication with documented limitations | Candidate CI passed; PR #1 targets `main`. Merge and post-merge details are recorded in the final closure update. |
 
 ## R. Git delivery
 
-Candidate branch `release/security-coverage-v1-readiness` is pushed; latest tested head is `be9815390541ffd3f509bdfca11041181dcb77fc`. Fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` passed all nine jobs in run [41392637814](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41392637814), and latest report/secret-scan evidence head `be98153` passed all nine jobs in run [41393283842](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41393283842). PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) remains draft and targets `main`. Main and origin/main remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory runtime/network gates fail.
+Candidate branch `release/security-coverage-v1-readiness` is pushed; tested candidate `fe9735d783be6bc495843d724f18f3e04d804cff` passed all nine jobs in Actions run [41393498507](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41393498507). PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) targets `main`. The owner authorized publication while accepting the limitations recorded in this report. The documentation update receives its own candidate CI run; merge and final-main details will be appended after verification.
 
 ## S. Remaining risks
 
@@ -157,8 +159,20 @@ Candidate branch `release/security-coverage-v1-readiness` is pushed; latest test
 
 ## T. Final decision
 
-**BLOCKED.** The required agent runtime acceptance and strict network contract cannot be tested in this non-administrator session without an offline model runtime. Do not merge this candidate to `main`, claim production readiness, or submit to Agensi.
+**INITIAL PUBLIC RELEASE — KNOWN VERIFICATION LIMITATIONS.** The owner accepts the documented gaps for this initial release. This release is not security-certified or fully production-verified. Do not claim the missing runtime tests passed. No Agensi submission is made.
 
 ## U. Owner next steps
 
 Provide an offline-capable agent runtime or an owner-approved enforced egress test boundary for the model runtime, then run and preserve the actual refusal, evidence-included/excluded, prompt-injection, and resume/recovery scenarios. After every mandatory gate passes, move PR #1 from draft to review and merge through the repository's protected workflow. Then rebuild and verify the package from final `main`, recompute its SHA-256, confirm the published Skills CLI install, and have the owner submit `dist/security-coverage-agensi.zip` with the reviewed `marketplace/listing.md` and demo materials. No Agensi submission was made by this task.
+
+## Owner decision and release closure
+
+The owner authorized publication of candidate `fe9735d783be6bc495843d724f18f3e04d804cff` to `main`, accepting the documented limitations. This supersedes historical hold language in earlier evidence notes. Classification: **INITIAL PUBLIC RELEASE — KNOWN VERIFICATION LIMITATIONS**. Automated tests, hosted CI, installer testing, and secret scanning passed as recorded above. Live agent refusal, evidence-scope inclusion/exclusion, fresh prompt-injection, and resume/recovery scenarios remain unverified. Strict host-level network isolation remains unverified. Claude Code and other agent runtimes are not fully verified. No Agensi submission is made.
+
+### Final closure record
+
+- Final `main` SHA: pending.
+- PR #1 merge result: pending.
+- Post-merge GitHub Actions result: pending.
+- Public Skills CLI installation: pending.
+- Agensi archive file count, size, and SHA-256: pending.

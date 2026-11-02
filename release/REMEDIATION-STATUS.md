@@ -68,3 +68,7 @@ Gitleaks v8.30.1 was verified against the official release asset digest, run wit
 - Gitleaks 8.30.1: zero findings in worktree, all-ref Git history, and Agensi ZIP, with redaction enabled.
 - Agent runtime gates are BLOCKED because the host cannot enforce egress and no local model runtime exists. No new agent scenarios are claimed as passed.
 - PR #1 remains draft. Main is unchanged at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No Agensi submission occurred.
+
+## Owner release decision (2026-11-02)
+
+The owner explicitly accepted the documented runtime limitations and authorized publishing the current tested candidate. This supersedes prior historical `NOT READY`/do-not-merge statements in this status log. Classification: **INITIAL PUBLIC RELEASE — KNOWN VERIFICATION LIMITATIONS**. Automated tests, hosted CI, installer matrix, and secret scan have passed; live refusal, evidence-scope, prompt-injection, resume/recovery, strict host network isolation, and full Claude/other runtime verification remain unverified. No Agensi submission was made. See `FINAL-PRODUCTION-RELEASE-REPORT.md` for the closure record.

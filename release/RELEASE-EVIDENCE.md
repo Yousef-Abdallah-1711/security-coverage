@@ -104,3 +104,7 @@ Current tested candidate head `be9815390541ffd3f509bdfca11041181dcb77fc` passed 
 Gitleaks 8.30.1, downloaded to temporary storage from the official release and checksum-verified, reported zero findings in the worktree, all-ref Git history, and Agensi package ZIP. The fresh Windows installer matrix and 41-test local suite pass; Linux symlink coverage passes in hosted CI.
 
 Runtime acceptance remains blocked: the host is non-administrator, has no enforcing proxy configured, and has no offline local model runtime. No agent refusal, no-approval, ambiguity, scope expansion, evidence-scope, or fresh-session recovery test was run in this environment. These scenarios are not passed, and no merge to main or Agensi submission occurred.
+
+## Owner decision and release closure (2026-11-02)
+
+The owner authorized publishing candidate `fe9735d783be6bc495843d724f18f3e04d804cff` to `main`, accepting documented runtime limitations. This supersedes earlier historical entries in this log that said not to merge or leave PR #1 in draft. Release classification: **INITIAL PUBLIC RELEASE — KNOWN VERIFICATION LIMITATIONS**. Automated tests, hosted CI, installer testing, and secret scanning passed as summarized in `FINAL-PRODUCTION-RELEASE-REPORT.md`. Live refusal, evidence-scope, fresh prompt-injection, resume/recovery, strict host-level network isolation, and full Claude/other agent runtime verification remain unverified. No Agensi submission is performed. Final merge, main SHA, public install, and rebuilt archive evidence will be recorded in the final report.
