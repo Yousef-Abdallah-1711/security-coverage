@@ -80,3 +80,13 @@ This CI/distribution evidence does not clear the mandatory agent-host no-network
 The no-slash helper ref was deleted after its install verification; only the release candidate branch remains pushed.
 
 Final report/evidence candidate HEAD `961fd1490baaf6704f3e03ea004562efc8e1462c` passed all 9 jobs in Actions run [41391292195](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41391292195). That run covers all Python versions on Windows and Ubuntu, Linux symlink handling, shell/PowerShell syntax, and offline detector/package isolation. The release branch remains draft PR #1; no main merge or Agensi submission occurred.
+
+## 2026-11-02 runtime acceptance and installer fix
+
+The fresh disposable installer matrix exposed a cp1252 console error after Unicode-path installs. Fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7` adds safe output escaping and a regression test. Under `PYTHONIOENCODING=cp1252`, Bash local dual-agent install/reinstall/uninstall/repeated uninstall, Bash Claude-only local install/uninstall, PowerShell Codex-only local install/uninstall, and PowerShell global dual-agent install/reinstall/uninstall/repeated uninstall passed. Temporary test root: `C:\Users\yosea\AppData\Local\Temp\SC installer final matrix 20261102`. No real agent home was touched.
+
+`python -m unittest discover -s tests -p test_installer.py -v`: 9 passed. `python -m unittest discover -s tests -v`: 41 passed, 0 failed, 1 expected Windows symlink capability skip. Python 3.8 AST, Bash syntax, PowerShell parse, JSON, package source/archive checks, and git whitespace checks passed. Agensi ZIP: 22 files, 28,743 bytes, SHA-256 `c7ed79700fbe2bf7764c8132cdc8bc1a31582fc5ce924f4aebf9b7377bc11bfb`.
+
+Hosted Actions run 41392637814 passed all 9 jobs on fix commit `3a7689ac39a2a41bbfdb60afaf85c642def0a4b7`, including Linux symlink and offline detector/package jobs.
+
+Runtime refusal/resume/evidence scope tests were not run: this Windows session is not elevated, no enforcing proxy is configured, and no offline local model exists. A network-enabled cloud agent test without an enforced egress policy would not satisfy the mandatory network gate. The host-boundary, runtime, and dedicated secret-scan gates remain open; main remains unchanged and PR #1 remains draft.
