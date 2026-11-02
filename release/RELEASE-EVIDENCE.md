@@ -68,3 +68,14 @@ The real assessment, plan, preview, approved remediation, focused verification, 
 Candidate work is on `release/security-coverage-v1-readiness`, based on `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. The local suite now contains 40 tests: all pass, with one Windows symlink capability skip. Docker `--network none` verification passed for detector/package only; image setup ran before isolation. Local Skills CLI v1.7.4 candidate discovery and disposable install passed. Candidate package is 22 files / 28,743 bytes / SHA-256 `c7ed79700fbe2bf7764c8132cdc8bc1a31582fc5ce924f4aebf9b7377bc11bfb`.
 
 Mandatory release gates remain open: strict host-level no-network-attempt evidence; actual runtime refusal, ambiguous approval, scope expansion, evidence scope, and resume/recovery cases; hosted candidate CI and Linux symlink run; fresh secret scan and full installer matrix. Therefore no merge/push to `main` and no Agensi submission. See `FINAL-PRODUCTION-RELEASE-REPORT.md` for details and any later candidate CI evidence.
+
+## Candidate hosted CI and remote distribution result (2026-11-02)
+
+Candidate code commit `2c58ae308a887082976c9456e11a394fbbb97f36` passed all 9 jobs in PR run [41391053531](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41391053531), including Python 3.8/3.11/3.13 on Ubuntu and Windows, Linux symlink coverage, offline detector/package isolation, Bash syntax, and PowerShell syntax. The first run failed the offline script with exit 126 because it lacked the executable bit; the mode was corrected and the subsequent complete run passed.
+
+Skills CLI 1.7.4 installed the remote candidate from a temporary no-slash branch ref at the same candidate SHA; one skill, 21 files and 14 references were installed, and the installed `SKILL.md` hash matched the candidate. A slash-delimited branch URL was misparsed by the CLI as ref `release`; remote-main installation has not occurred because the candidate remains unmerged.
+
+This CI/distribution evidence does not clear the mandatory agent-host no-network-attempt, approval refusal, evidence/resume, or runtime compatibility gates. PR #1 remains draft and must not be merged. `main` remains at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`.
+
+The no-slash helper ref was deleted after its install verification; only the release candidate branch remains pushed.
+

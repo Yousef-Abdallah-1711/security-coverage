@@ -91,14 +91,15 @@ Installer unit coverage passed in the full suite for managed install/update, own
 
 ## L. GitHub Actions
 
-Candidate hosted run, commit SHA, workflow URL, and job results: **NOT YET VERIFIED**. The prior green run `41389566440` predates this candidate and does not validate it. Do not infer a pass from the old run.
+PASS: PR run [41391053531](https://github.com/Yousef-Abdallah-1711/security-coverage/actions/runs/41391053531), head `2c58ae308a887082976c9456e11a394fbbb97f36`, all 9 jobs successful: Python 3.8/3.11/3.13 on Ubuntu 24.04 and Windows, shell syntax, PowerShell syntax, and offline detector/package isolation. The first candidate run `41390992201` exposed a missing executable bit (exit 126); the script mode was fixed in `2c58ae3`, then the full rerun passed. Linux symlink test ran in that matrix. GitHub emitted non-failing Node 20 deprecation and ubuntu-latest migration notices.
 
 ## M. Skills CLI distribution
 
 - Skills CLI: `1.7.4`.
 - Local source discovery: PASS, exactly one `security-coverage` skill.
 - Local disposable Codex installation: PASS from the candidate worktree; `SKILL.md` and references were present (21 files installed, 14 references).
-- The public command `npx skills add Yousef-Abdallah-1711/security-coverage` would fetch the current remote `main`; it does not install this uncommitted candidate. Candidate branch remote installation: NOT VERIFIED.
+- Remote candidate install: PASS with Skills CLI 1.7.4 from a temporary no-slash ref pointing to the same candidate SHA (deleted after verification); exactly one skill installed, 21 files/14 references, and installed `SKILL.md` SHA-256 matched local (`93ec56d8bb4ab068c8f968ebef00ad94eb8b23ad091813d028c7d91860a218f1`). A direct URL containing the slash-delimited release branch was parsed as ref `release` and failed; the temporary test ref was used to validate the CLI remote flow.
+- The public command `npx skills add Yousef-Abdallah-1711/security-coverage` targets current remote `main`; it does not install this candidate because the candidate has not been merged. Public-main install remains NOT VERIFIED.
 
 ## N. Agensi package
 
@@ -123,15 +124,15 @@ README now describes detector schema v3 heuristic evidence and clearly limits th
 | A — Repository integrity | PASS for preserved local candidate | Backup reported verified; remote main was fetched and remained at the baseline; candidate diff reviewed. |
 | B — Architecture | PASS locally | Single skill, references, templates, detector, package validation pass. |
 | C — Security | FAIL | Strict host-network no-attempt gate and required agent refusal/injection behavior are not fully evidenced. |
-| D — Testing | BLOCKED pending candidate CI | Local suite passes with one platform skip; hosted Linux symlink/CI result is not yet confirmed. |
-| E — Distribution | PARTIAL | Local Skills CLI install and package validation pass; remote branch/final-main install not tested. |
+| D — Testing | PASS for candidate | 40 local tests pass (one Windows symlink capability skip); candidate CI run 41391053531 passed all 9 jobs, including Linux symlink coverage and offline validation. |
+| E — Distribution | PASS for candidate | Local and remote candidate Skills CLI install and package validation pass. Published-main install remains unavailable until a permitted merge. |
 | F — Documentation | PARTIAL | Major scope/compatibility disclosures updated; full README rendering and all advertised command matrix not freshly checked. |
 | G — Workflow demonstration | PARTIAL | Approved demo exists; refusal, evidence-scope variants, and resume/recovery scenarios are open. |
-| H — GitHub release | BLOCKED | No validated candidate CI/PR yet; security gates remain open. |
+| H — GitHub release | PASS for candidate CI / BLOCKED for main delivery | Candidate is committed, PR checks pass, and branch is clean/mergeable. PR #1 remains draft; security/workflow gates prohibit merging to main. |
 
 ## R. Git delivery
 
-At report creation, candidate changes are uncommitted on `release/security-coverage-v1-readiness`; `main` and `origin/main` remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail. Candidate branch commit/PR/CI details must be appended after those actions are completed, if attempted.
+Candidate branch `release/security-coverage-v1-readiness` is pushed. Implementation commit `2c58ae308a887082976c9456e11a394fbbb97f36`; draft PR [#1](https://github.com/Yousef-Abdallah-1711/security-coverage/pull/1) targets `main`, is clean/mergeable, and has all checks passing in run 41391053531. The release report/evidence follow-up is being committed separately. `main` and `origin/main` remain at `7f982bf6f36da35dfa20d2d19cb2755a9f3c27a7`. No merge or push to `main` is authorized while mandatory gates fail.
 
 ## S. Remaining risks
 
@@ -148,3 +149,4 @@ At report creation, candidate changes are uncommitted on `release/security-cover
 ## U. Owner next steps
 
 After the mandatory gates are closed and the release candidate passes hosted CI, review and merge its PR through the repository's protected workflow. Then rebuild and verify the package from final `main`, recompute its SHA-256, confirm the published Skills CLI install, and have the owner submit `dist/security-coverage-agensi.zip` with the reviewed `marketplace/listing.md` and demo materials. No Agensi submission was made by this task.
+

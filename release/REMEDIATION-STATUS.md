@@ -40,3 +40,7 @@ The release-candidate continuation is **NOT READY** for `main`. Local evidence: 
 Still open: strict host-level agent network isolation/no-attempt; runtime refusal/no-response/ambiguous/changed-scope and evidence-scope scenarios; resume/recovery runtime scenarios; fresh Linux symlink and hosted candidate CI evidence; full installer matrix; secret scan; Claude and third-party agent runtime coverage. Historical Codex startup catalog requests were blocked with HTTP 401 but still count as attempts for the strict no-attempt gate.
 
 The current candidate is not merged to `main`. Do not claim production readiness or submit to Agensi. Candidate branch and hosted CI details, if produced, are recorded in the final release report.
+
+## Candidate hosted verification update
+
+Release candidate commit `2c58ae308a887082976c9456e11a394fbbb97f36` is pushed; draft PR #1 targets `main`. Hosted Actions run 41391053531 passed all 9 jobs, including Linux symlink and offline container verification. Initial run 41390992201 failed because `scripts/verify_offline.sh` lacked the executable bit; this was fixed on the branch and the rerun passed. The Skills CLI remote candidate installation succeeded from a temporary no-slash ref at the same SHA. These results do not close agent-host network, refusal, evidence, resume, or compatibility gates. `main` must remain unchanged.
